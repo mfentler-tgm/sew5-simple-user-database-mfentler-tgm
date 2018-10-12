@@ -7,5 +7,12 @@ Die detaillierte [Aufgabenstellung](TASK.md) beschreibt die notwendigen Schritte
 ### Vorarbeit
 Als erster Schritt wird Flask installiert:
 
-    pip install flask-restful
+    pip install tox
+Im tox.ini File added man noch folgende dependencies:
+
+    flask
+    flask-restful
+    request
+    json
+
 ## Quellen
