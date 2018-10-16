@@ -1,17 +1,5 @@
-import sqlite3
-from sqlite3 import Error
+from flask import Flask
+from flask_restful import reqparse, abort, Api, Resource
 
-
-def create_connection(db_file):
-    """ create a database connection to a SQLite database """
-    try:
-        conn = sqlite3.connect(db_file)
-        print(sqlite3.version)
-    except Error as e:
-        print(e)
-    finally:
-        conn.close()
-
-
-if __name__ == '__main__':
-    create_connection('D:\sqlite\db\crudsqlite.db')
+app = Flask(__name__)
+api = Api(app)
