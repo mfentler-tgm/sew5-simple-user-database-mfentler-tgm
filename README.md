@@ -19,11 +19,14 @@ Um SQLite herunter zu laden, holt man sich die Binarys von der offiziellen Webse
 
     sqlite3
 Zusätzlich kann man sqlite noch zum Pfad hinzufügen (recommended).
-#### Datenbank erstellen
-Aus einem JSON-File wird eine SQLite Datenbank erstellt. Dazu wird sqlitebitter verwendet.
-
-    pip install sqlitebiter
+### API Testing tool
+Um die Api zu testen gibt es zwei verschiedene Tools:
+- Postman  
+- Insomnia  
+(Hat meiner Ansicht nach ein einfacheres, besser gestaltetes Design)
     
 ## Quellen
 [1] https://medium.com/python-pandemonium/build-simple-restful-api-with-python-and-flask-part-2-724ebf04d12  
 [2] https://stackoverflow.com/questions/34202755/how-to-run-python-scripts-within-tox-created-virtual-environment-without-specify  
+[3] https://codeburst.io/this-is-how-easy-it-is-to-create-a-rest-api-8a25122ab1f3  
+
