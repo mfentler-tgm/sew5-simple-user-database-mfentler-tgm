@@ -9,7 +9,6 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'crud.sqlite')
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
-app = Flask(__name__)
 api = Api(app)
 
 parser = reqparse.RequestParser()
@@ -35,22 +34,21 @@ class UserSchema(ma.Schema):
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
-
 class User(Resource):
 
     def get(self, user_id):
-        user = User.query.get(user_id)
+        user = User_DB.query.get(user_id)
         return user_schema.jsonify(user)
 
     def delete(self, user_id):
-        user = User.query.get(user_id)
+        user = User_DB.query.get(user_id)
         db.session.delete(user)
         db.session.commit()
 
         return user_schema.jsonify(user)
 
     def put(self, user_id):
-        user = User.query.get(user_id)
+        user = User_DB.query.get(user_id)
         username = request.json['username']
         email = request.json['email']
 
@@ -63,7 +61,7 @@ class User(Resource):
 class UserList(Resource):
 
     def get(self):
-        all_users = User.query.all()
+        all_users = User_DB.query.all()
         result = users_schema.dump(all_users)
         return jsonify(result.data)
 
@@ -85,10 +83,6 @@ class UserList(Resource):
 ##
 api.add_resource(UserList, '/user')
 api.add_resource(User, '/user/<user_id>')
-# /users
-# /users/<id>
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
