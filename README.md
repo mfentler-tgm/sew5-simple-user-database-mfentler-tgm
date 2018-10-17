@@ -19,6 +19,9 @@ Um SQLite herunter zu laden, holt man sich die Binarys von der offiziellen Webse
 
     sqlite3
 Zusätzlich kann man sqlite noch zum Pfad hinzufügen (recommended).
+### Datenbank erstellen
+Die Datenbank, auf die im Code referenziert wird muss zuerst erstellt werden. Das geht folgendermaßen.  
+Man öffnet die CMD und wechselt in das Verzeichnis in dem die Datei liegt.
 ### API Testing tool
 Um die Api zu testen gibt es zwei verschiedene Tools:
 - Postman  
