@@ -22,6 +22,12 @@ Zusätzlich kann man sqlite noch zum Pfad hinzufügen (recommended).
 ### Datenbank erstellen
 Die Datenbank, auf die im Code referenziert wird muss zuerst erstellt werden. Das geht folgendermaßen.  
 Man öffnet die CMD und wechselt in das Verzeichnis in dem die Datei liegt.
+
+    python
+    #from <filename> import db
+    from client import db
+    db.create_all()
+Dieser Command erstellt einem die SQLite Datenbank.
 ### API Testing tool
 Um die Api zu testen gibt es zwei verschiedene Tools:
 - Postman  
