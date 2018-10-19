@@ -41,4 +41,7 @@ def test_put_user(client):
 def test_delete_user(client):
     response = client.delete('/user/1')
     assert response.status_code == 200
-    #assertRaises(Exception, test_get_user(client))
+
+    #response = client.get('/user')
+    #json_data = json.loads(response.data)
+    #assert not 'testuser' in json_data['username']
