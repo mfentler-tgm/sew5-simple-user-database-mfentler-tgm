@@ -8,12 +8,8 @@ Die detaillierte [Aufgabenstellung](TASK.md) beschreibt die notwendigen Schritte
 Als erster Schritt wird Tox installiert:
 
     pip install tox
-Im tox.ini File added man noch folgende dependencies:
+Im tox.ini File added man noch folgende Dependencies, die im "requirements.txt" File zu finden sind:
 
-    flask
-    flask-restful
-    request
-    json
 ### SQLite3
 Um SQLite herunter zu laden, holt man sich die Binarys von der offiziellen Webseite[3], erstellt einen neuen Ordner und fügt den heruntergeladenen Inhalt in diesen Ordner ein. Um die Installation zu verifizieren, folgender Befehl:
 

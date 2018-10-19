@@ -43,11 +43,10 @@ class User(Resource):
 
     def delete(self, user_id):
         user = User_DB.query.get(user_id)
-        username = request.json['username']
         db.session.delete(user)
         db.session.commit()
 
-        return "User {} was deleted.".format,200
+        return user_schema.jsonify(user)
 
     def put(self, user_id):
         user = User_DB.query.get(user_id)
