@@ -6,7 +6,8 @@ import os
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'usercrud.sqlite')
+print(basedir)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'C:\\Users\\mario\\git\\sew5-simple-user-database-mfentler-tgm\\usercrud.sqlite')
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 api = Api(app)
