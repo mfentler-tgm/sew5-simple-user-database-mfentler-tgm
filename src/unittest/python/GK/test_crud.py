@@ -29,6 +29,16 @@ def test_get_user(client):
     assert 'testuser' in json_data['username']
     assert 'linkZumBild' in json_data['picture']
 
+def test_put_user(client):
+    json_dict = {"email": "Neue Email", "username": "testuser"}
+    response = client.put('/user/1', data=json.dumps(json_dict), content_type='application/json')
+    assert response.status_code == 200
+    response = client.get('/user/1')
+    json_data = json.loads(response.data)
+
+    assert 'Neue Email' in json_data['email']
+
 def test_delete_user(client):
     response = client.delete('/user/1')
     assert response.status_code == 200
+    #assertRaises(Exception, test_get_user(client))
