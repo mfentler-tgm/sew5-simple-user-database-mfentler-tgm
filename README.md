@@ -105,8 +105,46 @@ Diese Aufteilung gibt es aus einem bestimmten Grund. Und zwar muss man der Api d
     api.add_resource(UserList, '/user')
     api.add_resource(User, '/user/<user_id>')
 
+## Testing
+Zum automatischen Testen der Api werden die Module pytest und pytest-flask verwendet.  
+Dabei benützt man einen pytest-client um auf die Api zuzugreifen.  
+In den Tests werden die Methoden post, get, put und delete überprüft.  
+
+Genauso wie bei Unittests gibt es auch hier Methoden, die vor jeder Methode ausgeführt werden. In dem Fall sieht die verwendete Methode so aus:  
+
+    @pytest.fixture
+    def client():
+        print('\n----- CREATE FLASK APPLICATION\n')
+        test_client = app.test_client()
+        return test_client
+
+Damit die tests vom pytest Command gefunden werden muss das File __"test\_*"__ und die Methoden darin auch __"test\_*"__ heißen.  
+
+Man kann über json Dictionaries Objekte der Api mitgeben. Im Fall von der Mehode Post kann der Test so aussehen:  
+
+    def test_post_user(client):
+        print('\n----- TESTING POST USER\n')
+        json_dict = {"email":"testuser@student.tgm.ac.at","username":"testuser","picture":"linkZumBild"}
+        response = client.post('/user', data=json.dumps(json_dict), content_type='application/json')
+        assert response.status_code == 200
+
+Über __client.REST-MethodenName__ kann man die Methoden der Api ansprechen.
+
+### Globale Variable userCounter
+Mit der globalen Variable wird der hardgecodete Teil aus den Tests herausgenommen. Die Variable wird mit der Länge der Objekte im json File beschrieben. Somit wissen die Methoden welche id der Testuser haben muss. 
+
+Um auf eine globale Variable zuzugreifen, wenn man sie überschreiben will, muss man sie zuerst als global in dieser Methode deklarieren. Wenn man nur den Inhalt der Variable abfragen möchte reicht es sie über den Variablennamen aufzurufen.    
+
+    result = client.get('/user')
+    json_data = json.loads(result.data)
+    global userCounter
+    for item in json_data:
+        userCounter += 1
+    url = '/user/' + str(userCounter)
+
 ## Quellen
 [1] https://medium.com/python-pandemonium/build-simple-restful-api-with-python-and-flask-part-2-724ebf04d12  
 [2] https://stackoverflow.com/questions/34202755/how-to-run-python-scripts-within-tox-created-virtual-environment-without-specify  
 [3] https://codeburst.io/this-is-how-easy-it-is-to-create-a-rest-api-8a25122ab1f3  
-
+[4] https://stackoverflow.com/questions/423379/using-global-variables-in-a-function   
+[5] https://stackoverflow.com/questions/24898797/check-if-key-exists-and-iterate-the-json-array-using-python  

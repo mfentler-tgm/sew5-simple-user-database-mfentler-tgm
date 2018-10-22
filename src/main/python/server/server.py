@@ -48,11 +48,15 @@ class User(Resource):
 
     def put(self, user_id):
         user = User_DB.query.get(user_id)
-        username = request.json['username']
-        email = request.json['email']
-
-        user.email = email
-        user.username = username
+        if ('username' in request.json):
+            username = request.json['username']
+            user.username = username
+        if ('email' in request.json):
+            email = request.json['email']
+            user.email = email
+        if ('picture' in request.json):
+            picture = request.json['picture']
+            user.picture = picture
 
         db.session.commit()
         return user_schema.jsonify(user)
@@ -65,6 +69,13 @@ class UserList(Resource):
         return jsonify(result.data)
 
     def post(self):
+        if('username' not in request.json):
+            raise ValueError('Give username a value')
+        if ('email' not in request.json):
+            raise ValueError('Give email a value')
+        if ('picture' not in request.json):
+            raise ValueError('Give picture a value')
+
         username = request.json['username']
         email = request.json['email']
         picture = request.json['picture']

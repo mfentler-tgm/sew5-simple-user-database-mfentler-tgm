@@ -20,6 +20,13 @@ def test_post_user(client):
     response = client.post('/user', data=json.dumps(json_dict), content_type='application/json')
     assert response.status_code == 200
 
+def test_post_user_notAllArgs(client):
+    print('\n----- TESTING POST USER WITH NOT ALL ARGS GIVEN\n')
+    json_dict = {"username": "testuser", "picture": "linkZumBild"}
+    response = client.post('/user', data=json.dumps(json_dict), content_type='application/json')
+    assert ValueError
+    assert response.status_code == 500
+
 def test_get_user(client):
     print('\n--- TESTING GET USER\n')
     # Do whatever is necessary to create a user here…
@@ -30,7 +37,6 @@ def test_get_user(client):
     for item in json_data:
         userCounter += 1
     url = '/user/' + str(userCounter)
-    print(url)
 
     response = client.get(url)
     json_data = json.loads(response.data)
@@ -57,7 +63,7 @@ def test_delete_user(client):
     print('\n--- TESTING DELETE USER\n')
 
     url = '/user/' + str(userCounter)
-    
+
     response = client.delete(url)
     assert response.status_code == 200
 
