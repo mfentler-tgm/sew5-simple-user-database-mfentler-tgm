@@ -39,6 +39,7 @@ class User(Resource):
 
     def get(self, user_id):
         user = User_DB.query.get(user_id)
+        print(user_schema.jsonify(user))
         return user_schema.jsonify(user)
 
     def delete(self, user_id):
