@@ -5,6 +5,7 @@ import pytest
 import json
 from server.server import app
 
+userCounter = 0
 
 @pytest.fixture
 def client():
@@ -23,7 +24,15 @@ def test_get_user(client):
     print('\n--- TESTING GET USER\n')
     # Do whatever is necessary to create a user here…
 
-    response = client.get('/user/1')
+    result = client.get('/user')
+    json_data = json.loads(result.data)
+    global userCounter
+    for item in json_data:
+        userCounter += 1
+    url = '/user/' + str(userCounter)
+    print(url)
+
+    response = client.get(url)
     json_data = json.loads(response.data)
 
     assert 'id' in json_data
@@ -33,21 +42,27 @@ def test_get_user(client):
 
 def test_put_user(client):
     print('\n--- TESTING PUT USER\n')
+
+    url = '/user/' + str(userCounter)
+
     json_dict = {"email": "Neue Email", "username": "testuser"}
-    response = client.put('/user/1', data=json.dumps(json_dict), content_type='application/json')
+    response = client.put(url, data=json.dumps(json_dict), content_type='application/json')
     assert response.status_code == 200
-    response = client.get('/user/1')
+    response = client.get(url)
     json_data = json.loads(response.data)
 
     assert 'Neue Email' in json_data['email']
 
 def test_delete_user(client):
     print('\n--- TESTING DELETE USER\n')
-    response = client.delete('/user/1')
+
+    url = '/user/' + str(userCounter)
+    
+    response = client.delete(url)
     assert response.status_code == 200
 
     #Test if user is still in the db
-    response = client.get('/user/1')
+    response = client.get(url)
     json_data = json.loads(response.data)
     try:
         json_data['username']

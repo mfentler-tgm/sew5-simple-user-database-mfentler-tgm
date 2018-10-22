@@ -14,7 +14,6 @@ api = Api(app)
 parser = reqparse.RequestParser()
 parser.add_argument('user')
 
-
 class User_DB(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True)
