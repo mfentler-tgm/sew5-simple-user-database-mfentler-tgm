@@ -10,9 +10,8 @@ userCounter = 0
 @pytest.fixture
 def client():
     '''
-    This Method is called before every test. It sets up the environment.
-
-    :return: This Method returns a test_client, used by the test methods.
+    This method is like the @setup Method. It gets called before every test.
+    :return: Returns a REST interface which is used by the test methods.
     '''
     print('\n----- CREATE FLASK APPLICATION\n')
     test_client = app.test_client()
@@ -33,6 +32,7 @@ def countUser(client):
     global userCounter
     for item in json_data:
         userCounter += 1
+    print(userCounter)
 
 def test_post_user(client):
     '''
