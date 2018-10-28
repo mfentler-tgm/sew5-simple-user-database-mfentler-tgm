@@ -6,3 +6,4 @@ flask-restful
 flask-sqlalchemy
 flask-marshmallow
 requests
+sphinx >= 1.7.5, < 2

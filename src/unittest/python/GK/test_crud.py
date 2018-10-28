@@ -21,27 +21,26 @@ def client():
 
     yield test_client
 
-    #delete_all_user(test_client)
-
-def delete_all_user(client):
-    '''
-    This Methods deletes all users in the database
-    '''
-
-    response = client.get('/user')
-    all_user_json = json.loads(response.data)
-    for user in all_user_json:
-        client.delete('/user/' + str(user['id']))
-
 def countUser(client):
+    '''
+    This Method overwrites the global variable userCounter which is used in the test methods.
+
+    :param client: is the Flask test_client.
+    '''
+
     result = client.get('/user')
     json_data = json.loads(result.data)
     global userCounter
     for item in json_data:
         userCounter += 1
-    print(userCounter)
 
 def test_post_user(client):
+    '''
+    This Method is testing the post method.
+
+    :param client: is the Flask test_client
+    '''
+
     print('\n----- TESTING POST USER\n')
 
     json_dict = {"email":"testuser@student.tgm.ac.at","username":"testuser","picture":"linkZumBild"}
@@ -49,6 +48,12 @@ def test_post_user(client):
     assert response.status_code == 200
 
 def test_post_user_notAllArgs(client):
+    '''
+    This Method tests to post a new user without giving every arg.
+
+    :param client: Is the Flask test_client.
+    '''
+
     print('\n----- TESTING POST USER WITH NOT ALL ARGS GIVEN\n')
 
     json_dict = {"username": "testuser", "picture": "linkZumBild"}
@@ -57,6 +62,12 @@ def test_post_user_notAllArgs(client):
     assert response.status_code == 500
 
 def test_get_user(client):
+    '''
+    This Method tests the GET Method.
+
+    :param client: Is the Flask test_client.
+    '''
+
     print('\n--- TESTING GET USER\n')
 
     countUser(client)
@@ -70,6 +81,12 @@ def test_get_user(client):
     assert 'linkZumBild' in json_data['picture']
 
 def test_put_user(client):
+    '''
+    This Method updates a user and tests if the updates took place.
+
+    :param client: Is the Flask test_client
+    '''
+
     print('\n--- TESTING PUT USER\n')
 
     countUser(client)
@@ -86,7 +103,7 @@ def test_delete_user(client):
     '''
     This Methods deletes the last added user and tests if it is still there.
 
-    :param client: is the test_client.
+    :param client: is the Flask test_client.
     '''
 
     print('\n--- TESTING DELETE USER\n')
