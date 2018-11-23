@@ -15,14 +15,15 @@ export default {
     }
   },
   methods: {
-    getMessage () {
-      axios.get('localhost:5000/user')
+    async getMessage () {
+      var result = await axios.get('http://localhost:5000/user')
         .then((res) => {
           this.msg = res.data
         })
         .catch((error) => {
           this.msg = error
         })
+      console.log(result)
     }
   },
   created () {
