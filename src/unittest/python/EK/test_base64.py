@@ -26,7 +26,7 @@ def test_createUserWithPic(client):
 
     :param client: is the Flask test_client
     '''
-    print('\n----- TESTING POST USER WITH base64 image\n')
+    print('\n-----  TESTING POSTUSER WITH base64 image\n')
 
     with open("src/unittest/python/EK/picture.png", "rb") as image_file:
         base64_image_string = base64.encodebytes(image_file.read())

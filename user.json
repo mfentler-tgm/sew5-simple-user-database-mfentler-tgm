@@ -1,14 +1,14 @@
 {
-users: [
-	{
-		id: 1,
-		"username":"mfentler",
-		"email":"mfentler@student.tgm.ac.at"
-	},
-	{
-		id: 2,
-		"username":"mmuster",
-		"email":"mmuster@gmail.com"
-	}
-]
+  users: [
+    {
+      id: 1,
+      "username": "mfentler",
+      "email": "mfentler@student.tgm.ac.at"
+    },
+    {
+      id: 2,
+      "username": "mmuster",
+      "email": "mmuster@gmail.com"
+    }
+  ]
 }

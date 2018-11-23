@@ -1,0 +1,7 @@
+- [ ] Todo.md erstellen  
+- [ ] Git forken & upstream pushen  
+- [ ] Vue.js initialisieren -> src/main/vue/client  
+- [ ] Client mit Vue.js auf REST-Server verbinden (Ausbauen der User)  
+- [ ] Cypress.io Tests für das Listing der User schreiben  
+- [ ] .travis.yml erstellen und das neue origin/master(Fork!) mit Travis-CI.com verbinden und server/client Tests ausführen.  
+- [ ]
