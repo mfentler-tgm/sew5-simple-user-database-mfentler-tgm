@@ -1,6 +1,6 @@
 <template>
     <div>
-    <p>{{ msg }}</p>
+    <p>{{ results }}</p>
   </div>
 </template>
 
@@ -11,19 +11,22 @@ export default {
   name: 'User',
   data () {
     return {
-      msg: ''
+      results: null
     }
   },
   methods: {
-    async getMessage () {
-      var result = await axios.get('http://localhost:5000/user')
+    getMessage () {
+      axios({
+        method: 'get',
+        url: 'http://localhost:5000/user',
+        timeout: 60 * 0.5 * 1000
+      })
         .then((res) => {
-          this.msg = res.data
+          this.results = res.data
         })
         .catch((error) => {
-          this.msg = error
+          this.results = error
         })
-      console.log(result)
     }
   },
   created () {

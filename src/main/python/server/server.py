@@ -2,6 +2,7 @@ from flask import Flask,request, jsonify
 from flask_restful import reqparse, abort, Api, Resource
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from flask_cors import CORS
 import os
 import base64
 
@@ -11,6 +12,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'C:
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 api = Api(app)
+
+#enable CORS
+CORS(app)
 
 parser = reqparse.RequestParser()
 parser.add_argument('user')
