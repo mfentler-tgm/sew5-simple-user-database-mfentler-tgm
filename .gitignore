@@ -6,3 +6,4 @@ testreport.html
 __pycache__
 *egg-info
 venv
+node_modules

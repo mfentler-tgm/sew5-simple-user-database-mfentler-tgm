@@ -28,6 +28,20 @@ Für die Aufgabe braucht man noch zusätzlich folgende Packages:
     JavaScript:
     npm install axios@0.18.0 --save
     npm install bootstrap@4.1.1 --save
+    npm install cypress --save-dev
+
+### VUE.js
+
+### Cypress.io Tests
+Mit folgendem Command kann man Cypress ausführen  
+
+	npm run cypress:open
+Dazu muss vorher in das package.json folgende Lines zu den Scripts hinzufügen:  
+
+	"cypress:open": "cypress open"
+Anschließend kann man die Tests in JS-Files schreiben, die sich in folgenem Ordner befinden müssen. (src/main/vue/client/cypress/integration)
+### Travis
+
 ## Quellen
 [1] - [https://testdriven.io/developing-a-single-page-app-with-flask-and-vuejs](https://testdriven.io/developing-a-single-page-app-with-flask-and-vuejs)  
 [2] - [https://flask-cors.corydolphin.com/en/latest/index.html](https://flask-cors.corydolphin.com/en/latest/index.html)  
