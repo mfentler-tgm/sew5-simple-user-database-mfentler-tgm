@@ -121,8 +121,8 @@
                         placeholder="Picture">
           </b-form-input>
         </b-form-group>
-        <b-button type="submit" variant="primary">Update</b-button>
-        <b-button type="reset" variant="danger">Cancel</b-button>
+        <b-button id="edit-form-submit-button" type="submit" variant="primary">Update</b-button>
+        <b-button id="edit-form-cancel-button" type="reset" variant="danger">Cancel</b-button>
       </b-form>
     </b-modal>
   </div>
