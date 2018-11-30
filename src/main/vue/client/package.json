@@ -10,10 +10,11 @@
     "test": "npm run unit",
     "lint": "eslint --ext .js,.vue src test/unit",
     "build": "node build/build.js",
-	"cypress:open": "cypress open"
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "bootstrap": "^4.1.1",
+    "bootstrap-vue": "^2.0.0-rc.11",
     "request": "^2.88.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
