@@ -26,25 +26,31 @@ describe('VUE CRUD tests', () => {
     cy.get('#user-update-modal').get('#edit-form-submit-button').click()
   })
 
+  /**
   it('checks if old username does not exist anymore', () => {
     cy.visit('localhost:8080')
     cy.get('table').contains('td','Max Mustermann').should('not.exist')
   })
+   */
 
   it('checks if new username exists now', () => {
     cy.visit('localhost:8080')
     cy.get('table').contains('td','Max Mustermann 2')
   })
 
-  it('deletes the test user and checks if it is not there anymore', () => {
+  it('deletes the test user', () => {
     cy.visit('localhost:8080')
     cy.get('table')
     .contains('tr','Max Mustermann 2')
     .contains('td','Delete')
     .click()
+  })
 
+  it('Checks if testuser is gone', () => {
+    cy.visit('localhost:8080')
     cy.get('table')
     .contains('tr','Max Mustermann 2')
     .should('not.exist')
   })
+
 })
