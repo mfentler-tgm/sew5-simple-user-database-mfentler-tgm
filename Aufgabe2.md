@@ -31,6 +31,51 @@ Für die Aufgabe braucht man noch zusätzlich folgende Packages:
     npm install cypress --save-dev
 
 ### VUE.js
+Für VUE wird als erstes ein neuer Ordner angelegt. Das geht mit folgendem Befehl. Dabei 'entered' man sich einfach durch.  
+
+    vue init webpack <name>
+Nachdem man das gemacht hat bekommt man direkt eine vordefinierte Projektstruktur.  
+Als nächster Schritt wird ein neues .vue File im components Ordner angelegt. In dieses File kommt der HTML und JavaScript Code -> das __eigentlich wesentliche File__!
+
+Im __main.js__ File wird Bootstrap importiert.  
+
+    import Vue from 'vue'
+    import App from './App'
+    import router from './router'
+    import 'bootstrap/dist/css/bootstrap.css'
+    import BootstrapVue from 'bootstrap-vue'
+    import { Modal } from 'bootstrap-vue/es/components'
+    
+    Vue.config.productionTip = false
+    Vue.use(BootstrapVue)
+    Vue.use(Modal)
+    
+    /* eslint-disable no-new */
+    new Vue({
+      el: '#app',
+      router,
+      components: { App },
+      template: '<App/>'
+    })
+In das File im __route__ Ordner werden die Files den Routen zugewiesen. (In unserem Fall wird das User File der Route '/' zugewiesen)  
+
+    import Vue from 'vue'
+    import Router from 'vue-router'
+    import User from '@/components/User'
+    import 'bootstrap/dist/css/bootstrap.css'
+    
+    Vue.use(Router)
+    
+    export default new Router({
+      routes: [
+        {
+          path: '/',
+          name: 'User',
+          component: User
+        }
+      ],
+      mode: 'history'
+    })
 
 ### Cypress.io Tests
 Mit folgendem Command kann man Cypress ausführen  
