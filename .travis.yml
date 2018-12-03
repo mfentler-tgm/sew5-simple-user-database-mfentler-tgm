@@ -1,15 +1,22 @@
 language: python
 matrix:
   include:
-    - python: 3.7-dev
-    install:
-      - pip install tox
-    script:
-      - tox
+    - language: python
+      python:
+      - 3.7
+      dist: xenial
+      sudo: true
+      before_script:
+      - cd $TRAVIS_BUILD_DIR
+      install:
+        - pip install tox
+      script:
+        - tox
 
     - language: generic
       python:
-        - 3.7-dev
+        - 3.7
+      dist: xenial
       sudo: true
       before_install:
         - cd $TRAVIS_BUILD_DIR
