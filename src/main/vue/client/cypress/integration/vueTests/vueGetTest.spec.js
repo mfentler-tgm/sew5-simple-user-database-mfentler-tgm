@@ -9,9 +9,9 @@ describe('VUE CRUD tests', () => {
 
     cy.get('#form-username-input').type('Max Mustermann')
     cy.get('#form-email-input').type('mmuster@gmail.at')
-    cy.get('#form-picture-input').type('LinkZumAllerbestenPicture')
+    cy.get('#form-picture-input').type('LinkZumAllerbestenPicture.png')
 
-    cy.contains('Submit').click()
+    cy.get('#addUserForm').submit()
   })
 
   it('tests updating the name of a user', () => {
@@ -20,8 +20,7 @@ describe('VUE CRUD tests', () => {
     cy.get('#form-username-edit-input').clear()
     cy.get('#form-username-edit-input').type('Max Mustermann 2')
 
-    
-    cy.get('#user-update-modal').get('#edit-form-submit-button').click()
+    cy.get('#editUserForm').submit()
   })
 
   it('checks if old username does not exist anymore', () => {

@@ -15,6 +15,7 @@ def client():
     '''
     print('\n----- CREATE FLASK APPLICATION\n')
     test_client = app.test_client()
+
     global userCounter
     userCounter = 0
 

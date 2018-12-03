@@ -50,7 +50,7 @@
              id="user-modal"
             title="Add a new user"
             hide-footer>
-      <b-form @submit="onSubmit" @reset="onReset" class="w-100">
+      <b-form @submit="onSubmit" @reset="onReset" id = "addUserForm" class="w-100">
         <b-form-group id="form-username-group"
                       label="Username:"
                       label-for="form-username-input">
@@ -75,14 +75,14 @@
                       label="Picture:"
                       label-for="form-picture-input">
           <b-form-input id="form-picture-input"
-                        type="text"
+                        type="data"
                         v-model="addUserForm.picture"
                         required
                         placeholder="Enter picture link">
           </b-form-input>
         </b-form-group>
-        <b-button type="submit" variant="primary">Submit</b-button>
-        <b-button type="reset" variant="danger">Reset</b-button>
+        <b-button type="submit" id="add-form-submit-button" variant="primary">Submit</b-button>
+        <b-button type="reset" id="add-form-reset-button" variant="danger">Reset</b-button>
       </b-form>
     </b-modal>
 
@@ -90,7 +90,7 @@
              id="user-update-modal"
              title="Update"
              hide-footer>
-      <b-form @submit="onSubmitUpdate" @reset="onResetUpdate" class="w-100">
+      <b-form @submit="onSubmitUpdate" @reset="onResetUpdate" id="editUserForm" class="w-100">
         <b-form-group id="form-username-edit-group"
                       label="Username:"
                       label-for="form-username-edit-input">
@@ -115,7 +115,7 @@
                       label="Picture:"
                       label-for="form-picture-edit-input">
           <b-form-input id="form-picture-edit-input"
-                        type="text"
+                        type="data"
                         v-model="editForm.picture"
                         required
                         placeholder="Picture">
