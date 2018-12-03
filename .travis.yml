@@ -2,26 +2,26 @@ language: python
 matrix:
   include:
     - python: 3.7-dev
-  install:
-    - pip install tox
-  script:
-    - tox
-
-  - language: generic
-    python:
-      - 3.7-dev
-    sudo: true
-    before_install:
-      - cd $TRAVIS_BUILD_DIR
-      - sudo apt-get install xvfb libgtk2.0-0 libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2
     install:
-      - pip install -r requirements.txt --user
-      - cd $TRAVIS_BUILD_DIR/src/main/vue/client
-      - npm install
-      - npm install wait-on
-    before-script:
-      - cd $TRAVIS_BUILD_DIR/src/main/vue/client
+      - pip install tox
     script:
-      - npm start & sleep 20
-      - npm run server & sleep 20
-      - node_modules/.bin/cypress run
+      - tox
+
+    - language: generic
+      python:
+        - 3.7-dev
+      sudo: true
+      before_install:
+        - cd $TRAVIS_BUILD_DIR
+        - sudo apt-get install xvfb libgtk2.0-0 libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2
+      install:
+        - pip install -r requirements.txt --user
+        - cd $TRAVIS_BUILD_DIR/src/main/vue/client
+        - npm install
+        - npm install wait-on
+      before-script:
+        - cd $TRAVIS_BUILD_DIR/src/main/vue/client
+      script:
+        - npm start & sleep 20
+        - npm run server & sleep 20
+        - node_modules/.bin/cypress run
