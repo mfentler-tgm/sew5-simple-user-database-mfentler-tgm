@@ -8,3 +8,5 @@ flask-sqlalchemy
 flask-marshmallow
 requests
 sphinx >= 1.7.5, < 2
+pyqt5
+pyqt5-tools
