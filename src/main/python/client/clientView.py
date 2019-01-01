@@ -21,7 +21,7 @@ class Ui_Client(object):
         self.allStudentsTable.setShowGrid(True)
         self.allStudentsTable.setWordWrap(True)
         self.allStudentsTable.setCornerButtonEnabled(True)
-        self.allStudentsTable.setRowCount(2)
+        self.allStudentsTable.setRowCount(0)
         self.allStudentsTable.setColumnCount(5)
         self.allStudentsTable.setObjectName("allStudentsTable")
         item = QtWidgets.QTableWidgetItem()
@@ -113,7 +113,5 @@ class Ui_Client(object):
         self.label_5.setText(_translate("MainWindow", "Email"))
         self.label_4.setText(_translate("MainWindow", "Picture"))
         self.addStudent_button.setText(_translate("MainWindow", "Add"))
-
-
 
 
