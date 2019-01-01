@@ -5,22 +5,51 @@ import server
 from PyQt5 import QtCore, QtGui, QtWidgets
 from client.clientView import Ui_Client
 
-class ClientController():
+class ClientController(object):
     def __init__(self):
-        self.dialog = QtWidgets.QDialog()
         self.view = Ui_Client()
 
-class RestHelper(QThread):
-    def __init__(self):
-        QThread.__init__(self)
+        self.window = QtWidgets.QMainWindow()
+        self.view.setupUi(self.window,self)
+
+        self.clientThread = ThreadHandeler(self)
+
+        self.view.loadStudent_button.clicked.connect(lambda: self.clientThread.getAllStudents())
 
     def show(self):
-        self.dialog.show()
+        self.window.show()
+
+    def close(self):
+        self.clientThread.close()
+
+class ThreadHandeler():
+
+    def __init__(self, Controller):
+        self.workerThread = RestHelper(Controller)
+        self.workerThread.start()
+
+    def close(self):
+        self.workerThread.quit()
 
     def getAllStudents(self):
-        students = server.UserList.get()
-        rowPosition = Ui_Client.allStudentsTable.rowCount()
-        Ui_Client.allStudentsTable.insertRow(rowPosition)
+        self.workerThread.getAllStudents()
+
+    def testMethod(self):
+        self.workerThread.testMethod()
+
+class RestHelper(QThread):
+    def __init__(self, Controller):
+        QThread.__init__(self)
+        self.controller = Controller
+
+    def testMethod(self):
+        print("Hallo Welt")
+
+    def getAllStudents(self):
+        #students = server.UserList.get()
+        rowPosition = self.controller.view.allStudentsTable.rowCount()
+        print(rowPosition)
+        self.controller.view.allStudentsTable.insertRow(rowPosition)
 
     def getOneStudent(self, id):
         pass
@@ -35,13 +64,5 @@ class RestHelper(QThread):
         pass
 
     def run(self):
-        self.getAllStudents()
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    app.exec_()
+        pass
+        #self.getAllStudents()
