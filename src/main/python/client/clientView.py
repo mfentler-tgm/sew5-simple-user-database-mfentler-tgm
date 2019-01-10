@@ -23,6 +23,7 @@ class Ui_Client(object):
         self.allStudentsTable.setCornerButtonEnabled(True)
         self.allStudentsTable.setRowCount(0)
         self.allStudentsTable.setColumnCount(5)
+
         self.allStudentsTable.setObjectName("allStudentsTable")
         item = QtWidgets.QTableWidgetItem()
         self.allStudentsTable.setHorizontalHeaderItem(0, item)
