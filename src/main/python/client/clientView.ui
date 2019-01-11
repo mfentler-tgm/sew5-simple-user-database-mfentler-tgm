@@ -19,8 +19,8 @@
      <rect>
       <x>20</x>
       <y>80</y>
-      <width>651</width>
-      <height>401</height>
+      <width>781</width>
+      <height>381</height>
      </rect>
     </property>
     <property name="maximumSize">
@@ -28,6 +28,9 @@
       <width>981</width>
       <height>16777215</height>
      </size>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
     </property>
     <property name="alternatingRowColors">
      <bool>true</bool>
@@ -48,8 +51,13 @@
      <number>0</number>
     </property>
     <property name="columnCount">
-     <number>5</number>
+     <number>6</number>
     </property>
+    <column>
+     <property name="text">
+      <string>ID</string>
+     </property>
+    </column>
     <column>
      <property name="text">
       <string>Username</string>
@@ -112,8 +120,8 @@
    <widget class="QWidget" name="formLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>699</x>
-      <y>30</y>
+      <x>20</x>
+      <y>520</y>
       <width>411</width>
       <height>181</height>
      </rect>

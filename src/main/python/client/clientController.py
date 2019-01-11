@@ -3,9 +3,10 @@ from PyQt5.QtCore import QThread
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QPushButton, QWidget
-from client.clientView import Ui_Client
-from client.clientModel import Model
-from server import server
+from clientView import Ui_Client
+#from client.clientView import Ui_Client
+from clientModel import Model
+#from client.clientModel import Model
 import requests
 
 class ClientController(object):
@@ -15,9 +16,8 @@ class ClientController(object):
         self.window = QtWidgets.QMainWindow()
         self.view.setupUi(self.window,self)
 
-        self.view.loadStudent_button.clicked.connect(lambda: self.getAllStudents())
+        #self.view.loadStudent_button.clicked.connect(lambda: self.getAllStudents())
 
-        self.table = self.view.allStudentsTable
         self.model = Model()
 
     def show(self):
@@ -29,19 +29,18 @@ class ClientController(object):
 
     def getAllStudents(self):
         self.view.loadStudent_button.setEnabled(False)
-        self.workerThread = RestHelper(self)
-        self.workerThread.start()
+        self.model.students = requests.get("http://127.0.0.1:5000/user")
+        self.updateStudentList()
+        #self.workerThread = RestHelper(self)
+        #self.workerThread.start()
 
-    def editStudent(self):
-        pass
+    def editStudent(self,id):
+        print("edit" + str(id))
 
-    def deleteStudent(self):
-        pass
+    def deleteStudent(self,id):
+        print("delete" + str(id))
 
     def updateStudentList(self):
-
-        btn = QPushButton('Update', self.view.allStudentsTable)
-        btn2 = QPushButton('Delete', self.view.allStudentsTable)
 
         self.view.allStudentsTable.setRowCount(0)
 
@@ -49,12 +48,20 @@ class ClientController(object):
             rowPosition = self.view.allStudentsTable.rowCount()
             self.view.allStudentsTable.insertRow(rowPosition)
 
-            self.view.allStudentsTable.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem(student['username']))
-            self.view.allStudentsTable.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(student['email']))
-            self.view.allStudentsTable.setItem(rowPosition, 2, QtWidgets.QTableWidgetItem(student['picture']))
+            id = student['id']
 
-            self.view.allStudentsTable.setCellWidget(rowPosition, 3, btn)
-            self.view.allStudentsTable.setCellWidget(rowPosition, 4, btn2)
+            self.view.allStudentsTable.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem(student['id']))
+            self.view.allStudentsTable.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(student['username']))
+            self.view.allStudentsTable.setItem(rowPosition, 2, QtWidgets.QTableWidgetItem(student['email']))
+            self.view.allStudentsTable.setItem(rowPosition, 3, QtWidgets.QTableWidgetItem(student['picture']))
+
+            btn = QPushButton('Update', self.view.allStudentsTable)
+            self.view.allStudentsTable.setCellWidget(rowPosition, 4, btn)
+            btn.clicked.connect(self.editStudent(student['id']))
+
+            btn2 = QPushButton('Delete', self.view.allStudentsTable)
+            self.view.allStudentsTable.setCellWidget(rowPosition, 5, btn2)
+            btn2.clicked.connect(self.editStudent(student['id']))
 
         self.view.loadStudent_button.setEnabled(True)
 
@@ -63,7 +70,6 @@ class RestHelper(QThread):
     def __init__(self, Controller):
         QThread.__init__(self)
         self.controller = Controller
-        self.table = self.controller.view.allStudentsTable
 
     def testMethod(self):
         print("Hallo Welt")
@@ -86,9 +92,5 @@ class RestHelper(QThread):
         self.wait()
 
     def run(self):
-        self.sleep(2)
-        #self.table.setRowCount(0)
-
-        self.controller.model.students = requests.get("http://127.0.0.1:5000/user")
-        self.controller.updateStudentList()
+        pass
 
