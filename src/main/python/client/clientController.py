@@ -39,24 +39,22 @@ class ClientController(object):
         pass
 
     def updateStudentList(self):
-        print("called")
-        self.table.rowCount(0)
+
+        btn = QPushButton('Update', self.view.allStudentsTable)
+        btn2 = QPushButton('Delete', self.view.allStudentsTable)
+
+        self.view.allStudentsTable.setRowCount(0)
+
         for student in self.model.students.json():
-            rowPosition = self.table.rowCount()
-            self.table.insertRow(rowPosition)
+            rowPosition = self.view.allStudentsTable.rowCount()
+            self.view.allStudentsTable.insertRow(rowPosition)
 
-            btn = QPushButton('Save changes', self.table)
-            #btn.clicked.connect(self.controller.editStudent())
+            self.view.allStudentsTable.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem(student['username']))
+            self.view.allStudentsTable.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(student['email']))
+            self.view.allStudentsTable.setItem(rowPosition, 2, QtWidgets.QTableWidgetItem(student['picture']))
 
-            btn2 = QPushButton('Delete',self.table)
-            #btn2.clicked.connect(self.controller.deleteStudent())
-
-            self.table.setItem(rowPosition, 0, QtWidgets.QTableWidgetItem(student["username"]))
-            self.table.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(student["email"]))
-            self.table.setItem(rowPosition, 2, QtWidgets.QTableWidgetItem(student["picture"]))
-
-            self.table.setCellWidget(rowPosition, 3, btn)
-            self.table.setCellWidget(rowPosition, 4, btn2)
+            self.view.allStudentsTable.setCellWidget(rowPosition, 3, btn)
+            self.view.allStudentsTable.setCellWidget(rowPosition, 4, btn2)
 
         self.view.loadStudent_button.setEnabled(True)
 
