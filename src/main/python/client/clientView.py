@@ -6,16 +6,18 @@
 #
 # WARNING! All changes made in this file will be lost!
 from PyQt5 import QtCore,QtGui,QtWidgets
+from PyQt5.QtWidgets import QHeaderView
 from functools import partial
 
 class Ui_Client(object):
     def setupUi(self, MainWindow, Controller):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1128, 786)
+        MainWindow.resize(1025, 786)
+
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.allStudentsTable = QtWidgets.QTableWidget(self.centralwidget)
-        self.allStudentsTable.setGeometry(QtCore.QRect(20, 80, 781, 381))
+        self.allStudentsTable.setGeometry(QtCore.QRect(20, 80, 1000, 381))
         self.allStudentsTable.setMaximumSize(QtCore.QSize(981, 16777215))
         self.allStudentsTable.setAutoFillBackground(False)
         self.allStudentsTable.setAlternatingRowColors(True)
@@ -24,6 +26,8 @@ class Ui_Client(object):
         self.allStudentsTable.setCornerButtonEnabled(True)
         self.allStudentsTable.setRowCount(0)
         self.allStudentsTable.setColumnCount(6)
+        self.allStudentsTable.horizontalHeader().setStretchLastSection(True)
+        self.allStudentsTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.allStudentsTable.setObjectName("allStudentsTable")
         item = QtWidgets.QTableWidgetItem()
         self.allStudentsTable.setHorizontalHeaderItem(0, item)
@@ -40,7 +44,7 @@ class Ui_Client(object):
         self.loadStudent_button = QtWidgets.QPushButton(self.centralwidget)
         self.loadStudent_button.setGeometry(QtCore.QRect(20, 490, 93, 28))
         self.loadStudent_button.setObjectName("loadStudent_button")
-        #self.loadStudent_button.clicked.connect(Controller.getAllStudents)
+        self.loadStudent_button.clicked.connect(Controller.getAllStudents)
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(250, 30, 191, 41))
         font = QtGui.QFont()
@@ -115,6 +119,7 @@ class Ui_Client(object):
         item.setText(_translate("MainWindow", "Delete"))
         self.loadStudent_button.setText(_translate("MainWindow", "Load"))
         self.label.setText(_translate("MainWindow", "All Students"))
+
         self.label_2.setText(_translate("MainWindow", "Username"))
         self.label_3.setText(_translate("MainWindow", "Add new student"))
         self.label_5.setText(_translate("MainWindow", "Email"))

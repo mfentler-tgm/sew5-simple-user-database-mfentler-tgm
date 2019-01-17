@@ -18,7 +18,7 @@ class ClientController(object):
         self.window = QtWidgets.QMainWindow()
         self.view.setupUi(self.window,self)
 
-        self.view.loadStudent_button.clicked.connect(self.getAllStudents)
+        #self.view.loadStudent_button.clicked.connect(self.getAllStudents)
 
         self.model = Model()
 
