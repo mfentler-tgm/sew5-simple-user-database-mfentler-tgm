@@ -26,8 +26,10 @@ class Ui_Client(object):
         self.allStudentsTable.setCornerButtonEnabled(True)
         self.allStudentsTable.setRowCount(0)
         self.allStudentsTable.setColumnCount(6)
+        # Source: https://stackoverflow.com/a/31641703
         self.allStudentsTable.horizontalHeader().setStretchLastSection(True)
         self.allStudentsTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
         self.allStudentsTable.setObjectName("allStudentsTable")
         item = QtWidgets.QTableWidgetItem()
         self.allStudentsTable.setHorizontalHeaderItem(0, item)
