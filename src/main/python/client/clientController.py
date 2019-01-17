@@ -39,7 +39,25 @@ class ClientController(object):
         #self.workerThread.start()
 
     def editStudent(self, current_row):
-        pass
+        if (current_row is not None):
+            id = self.view.allStudentsTable.item(current_row, 0).text()
+            username = self.view.allStudentsTable.item(current_row, 1).text()
+            email = self.view.allStudentsTable.item(current_row, 2).text()
+            picture = self.view.allStudentsTable.item(current_row, 3).text()
+
+            url = "http://localhost:5000/user/" + str(id)
+
+            # Checks if username and email are not null and not empty
+            if ((username != "") & (email != "") & (picture != "")):
+                json_dict = {'username': username, 'email': email, 'picture': picture}
+                requests.put(url, json=json_dict)
+            elif ((username != "") & (email != "")):
+                json_dict = {'username': username, 'email': email}
+                requests.put(url, json=json_dict)
+            else:
+                # TODO: Show error on GUI
+                print("Errorrrr")
+            self.updateStudentList()
 
     def deleteStudent(self, current_row):
         if (current_row is not None):
