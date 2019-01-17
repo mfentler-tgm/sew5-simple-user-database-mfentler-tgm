@@ -5,8 +5,7 @@
 # Created by: PyQt5 UI code generator 5.11.3
 #
 # WARNING! All changes made in this file will be lost!
-
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore,QtGui,QtWidgets
 
 class Ui_Client(object):
     def setupUi(self, MainWindow, Controller):
@@ -40,7 +39,7 @@ class Ui_Client(object):
         self.loadStudent_button = QtWidgets.QPushButton(self.centralwidget)
         self.loadStudent_button.setGeometry(QtCore.QRect(20, 490, 93, 28))
         self.loadStudent_button.setObjectName("loadStudent_button")
-        self.loadStudent_button.clicked.connect(Controller.getAllStudents)
+        #self.loadStudent_button.clicked.connect(Controller.getAllStudents)
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(250, 30, 191, 41))
         font = QtGui.QFont()
