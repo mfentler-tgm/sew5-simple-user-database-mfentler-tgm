@@ -18,24 +18,19 @@ class ClientController(object):
         self.window = QtWidgets.QMainWindow()
         self.view.setupUi(self.window,self)
 
-        #self.view.loadStudent_button.clicked.connect(self.getAllStudents)
-
         self.model = Model()
+
+    def returnWindow(self):
+        return self.window
 
     def show(self):
         self.window.show()
         self.getAllStudents()
 
-    def close(self):
-        pass
-        #self.clientThread.close()
-
     def getAllStudents(self):
         self.view.loadStudent_button.setEnabled(False)
-        #self.model.students = requests.get("http://127.0.0.1:5000/user")
+
         self.updateStudentList()
-        #self.workerThread = RestHelper(self)
-        #self.workerThread.start()
 
     def addNewStudent(self, username, email, picture=None):
         self.username = username.text()
@@ -46,7 +41,6 @@ class ClientController(object):
         if((self.username != "") & (self.email != "")):
             url = "http://localhost:5000/user"
             json_dict = {'username': self.username, 'email': self.email, 'picture': self.picture}
-            print(json_dict)
             requests.post(url, json = json_dict)
         self.updateStudentList()
 
@@ -109,33 +103,3 @@ class ClientController(object):
             btn2.clicked.connect(partial(self.deleteStudent, current_row = rowPosition))
 
         self.view.loadStudent_button.setEnabled(True)
-
-
-class RestHelper(QThread):
-    def __init__(self, Controller):
-        QThread.__init__(self)
-        self.controller = Controller
-
-    def testMethod(self):
-        print("Hallo Welt")
-
-    def getAllStudents(self):
-        pass
-    def getOneStudent(self, id):
-        pass
-
-    def deleteStudent(self, id):
-        pass
-
-    def addStudent(self, username, email, picture):
-        pass
-
-    def editStudent(self, id, username = None, email = None, picture = None):
-        pass
-
-    def __del__(self):
-        self.wait()
-
-    def run(self):
-        pass
-
