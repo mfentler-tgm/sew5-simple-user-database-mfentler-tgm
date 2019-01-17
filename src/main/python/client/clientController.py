@@ -9,7 +9,6 @@ from client.clientView import Ui_Client
 from client.clientModel import Model
 #from client.clientModel import Model
 import requests, json
-
 from functools import partial
 
 class ClientController(object):
@@ -37,6 +36,19 @@ class ClientController(object):
         self.updateStudentList()
         #self.workerThread = RestHelper(self)
         #self.workerThread.start()
+
+    def addNewStudent(self, username, email, picture=None):
+        self.username = username.text()
+        self.email = email.text()
+        self.picture = ""
+        if(picture):
+            self.picture = picture.text()
+        if((self.username != "") & (self.email != "")):
+            url = "http://localhost:5000/user"
+            json_dict = {'username': self.username, 'email': self.email, 'picture': self.picture}
+            print(json_dict)
+            requests.post(url, json = json_dict)
+        self.updateStudentList()
 
     def editStudent(self, current_row):
         if (current_row is not None):

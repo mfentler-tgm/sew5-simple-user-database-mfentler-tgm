@@ -6,6 +6,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 from PyQt5 import QtCore,QtGui,QtWidgets
+from functools import partial
 
 class Ui_Client(object):
     def setupUi(self, MainWindow, Controller):
@@ -86,6 +87,7 @@ class Ui_Client(object):
         self.addStudent_button = QtWidgets.QPushButton(self.formLayoutWidget)
         self.addStudent_button.setMaximumSize(QtCore.QSize(93, 16777215))
         self.addStudent_button.setObjectName("addStudent_button")
+        self.addStudent_button.clicked.connect(partial(Controller.addNewStudent, username=self.addStudent_username, email=self.addStudent_email, picture=self.addStudent_picture))
         self.formLayout.setWidget(4, QtWidgets.QFormLayout.FieldRole, self.addStudent_button)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
