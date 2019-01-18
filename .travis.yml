@@ -10,8 +10,8 @@ matrix:
         - pip install -r requirements_flask.txt
         - pip install tox
       before_script:
-        - cd $TRAVIS_BUILD_DIR/src/main/python/server
-        - python server.py &
+        - cd $TRAVIS_BUILD_DIR/src/main/vue/client
+        - npm run server:start & sleep 20
         - cd $TRAVIS_BUILD_DIR
       script:
         - tox
