@@ -78,6 +78,8 @@ class ClientController(object):
         self.model.students = requests.get("http://127.0.0.1:5000/user")
 
         self.view.allStudentsTable.setRowCount(0)
+        self.editButtons = []
+        self.deleteButtons = []
 
         for student in self.model.students.json():
             rowPosition = self.view.allStudentsTable.rowCount()
@@ -97,9 +99,11 @@ class ClientController(object):
             self.view.allStudentsTable.setCellWidget(rowPosition, 4, btn)
             #Source: http://discourse.techart.online/t/pyqt-maya-how-to-pass-arguments-to-a-function-when-connecting-it-to-pyqt-button/2953/2
             btn.clicked.connect(partial(self.editStudent, current_row = rowPosition))
+            self.editButtons.append(btn)
 
             btn2 = QPushButton('Delete', self.view.allStudentsTable)
             self.view.allStudentsTable.setCellWidget(rowPosition, 5, btn2)
             btn2.clicked.connect(partial(self.deleteStudent, current_row = rowPosition))
+            self.deleteButtons.append(btn2)
 
         self.view.loadStudent_button.setEnabled(True)
