@@ -5,7 +5,7 @@ matrix:
       python:
       - 3.7-dev
       install:
-        - pip install -r requirements.txt
+        - pip install -r requirements_flask.txt
         - pip install tox
       before_script:
         - cd $TRAVIS_BUILD_DIR/src/main/vue/client
@@ -21,7 +21,7 @@ matrix:
       sudo: true
       install:
         - cd $TRAVIS_BUILD_DIR
-        - pip install -r requirements.txt --user
+        - pip install -r requirements_flask.txt --user
         - cd $TRAVIS_BUILD_DIR/src/main/vue/client
         - npm install
         - npm install wait-on
