@@ -3,7 +3,7 @@ matrix:
   include:
     - language: python
       python:
-      - 3.7-dev
+        - 3.7-dev
       install:
         - pip install -r requirements_flask.txt
         - pip install tox
@@ -14,9 +14,9 @@ matrix:
       script:
         - tox
       cache:
-          directories:
-            - ~/.npm
-            - ~/.chache
+        directories:
+          - ~/.npm
+          - ~/.chache
 
     - language: generic
       python:
