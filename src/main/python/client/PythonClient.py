@@ -12,6 +12,5 @@ def main():
     except:
         print("Start server first")
 
-
 if __name__ == "__main__":
     main()

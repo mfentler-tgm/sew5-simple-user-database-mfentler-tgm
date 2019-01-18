@@ -125,7 +125,10 @@ class UserList(Resource):
             picture = request.json['picture']
             new_user = User_DB(username, email, picture=picture)
         except:
-            new_user = User_DB(username, email)
+            try:
+                new_user = User_DB(username, email)
+            except:
+                raise ValueError('The user exists already')
 
         db.session.add(new_user)
         db.session.commit()

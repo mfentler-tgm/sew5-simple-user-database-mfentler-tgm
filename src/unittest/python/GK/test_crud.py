@@ -62,6 +62,22 @@ def test_post_user_notAllArgs(client):
     assert ValueError
     assert response.status_code == 500
 
+def test_post_user_userExists(client):
+    '''
+    This Method tests to post a new user without giving every arg.
+
+    :param client: Is the Flask test_client.
+    '''
+
+    print('\n----- TESTING POST USER with existing data\n')
+
+    json_dict = {"email": "testuser@student.tgm.ac.at", "username": "testuser", "picture": "linkZumBild"}
+    response = client.post('/user', data=json.dumps(json_dict), content_type='application/json')
+
+    json_dict = {"email": "testuser@student.tgm.ac.at", "username": "testuser", "picture": "linkZumBild"}
+    response = client.post('/user', data=json.dumps(json_dict), content_type='application/json')
+    assert ValueError
+
 def test_get_user(client):
     '''
     This Method tests the GET Method.

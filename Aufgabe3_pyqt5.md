@@ -2,7 +2,10 @@
 
 ## Aufgabenstellung
 Die detaillierte Aufgabenstellung zu der Übung befindet sich [hier](TODO3.md)  
-
+## Deploying
+- Server starten (server.py)
+- PythonClient starten
+- Tox starten - für die Testcases
 ## Implementierung
 ### Vorarbeit
 Als erstes muss PyQt5 installiert werden.  
@@ -16,6 +19,18 @@ Er befindet sich hier: __C:\Python\Python37\Lib\site-packages\pyqt5_tools__
 Nachdem man dann mit dem Tool die GUI erstellt hat und sie abgespeichert hat muss man diese auch noch in ein Python File umwandeln. Das geht mit folgendem Befehl: 
 ```bash
 pyuic5 -x input.ui -o output.py
+```
+## Client starten
+Um die Desktop App zu starten, wurde eine eigene Klasse erstellt. In der Klasse wird eine neue __QApplication__ erstellt, ein __Controller__ und schließlich die __show()__ Methode des Controllers aufgerufen. Natürlich wird hier auch ein try catch eingebaut, da der __Server laufen__ muss damit die GUI funktioniert. -> Dazu server.py starten.  
+```python
+def main():
+    try:
+        app = QtWidgets.QApplication([])
+        controller = ClientController()
+        controller.show()
+        app.exec_()
+    except:
+        print("Start server first")
 ```
 
 ## MVC
