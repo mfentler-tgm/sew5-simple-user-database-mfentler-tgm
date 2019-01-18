@@ -1,6 +1,3 @@
-pytest
-pytest-cov
-pytest-html
 flask
 flask-cors
 flask-restful
