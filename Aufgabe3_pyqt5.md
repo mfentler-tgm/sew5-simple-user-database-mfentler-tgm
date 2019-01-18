@@ -5,6 +5,7 @@ Die detaillierte Aufgabenstellung zu der Übung befindet sich [hier](TODO3.md)
 ## Deploying
 - Server starten (server.py)
 - PythonClient starten
+oder
 - Tox starten - für die Testcases
 ## Implementierung
 ### Vorarbeit
