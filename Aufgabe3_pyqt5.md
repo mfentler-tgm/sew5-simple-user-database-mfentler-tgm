@@ -2,8 +2,16 @@
 
 ## Aufgabenstellung
 Die detaillierte Aufgabenstellung zu der Übung befindet sich [hier](TODO3.md)  
+
+### VERBESSERUNGSVORSCHLAEGE
+- Server starten aus tox File
+- dynamischer Port (auslesen aus config file)
+- bessere Dokumentation
+
+
 ## Deploying
-- Server starten (server.py)
+- Server starten:  
+Im Ordner /src/main/(server.py)
 - PythonClient starten
 oder
 - Tox starten - für die Testcases
