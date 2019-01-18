@@ -5,7 +5,7 @@ matrix:
       python:
       - 3.7-dev
       install:
-        - pip install -r requirements_flask.txt --user
+        - pip install -r requirements_flask.txt
         - pip install tox
       before_script:
         - cd $TRAVIS_BUILD_DIR/src/main/vue/client
@@ -28,4 +28,5 @@ matrix:
         - cd $TRAVIS_BUILD_DIR/src/main/vue/client
       script:
         - npm start & sleep 20
+        - npm run server & sleep 20
         - node_modules/.bin/cypress run
