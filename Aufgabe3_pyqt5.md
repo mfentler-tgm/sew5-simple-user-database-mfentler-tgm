@@ -17,3 +17,17 @@ Nachdem man dann mit dem Tool die GUI erstellt hat und sie abgespeichert hat mus
 ```bash
 pyuic5 -x input.ui -o output.py
 ```
+
+## MVC
+Als Design Pattern wird MVC verwendet. Die View ist das umgewandelte ui File (vorheriger Schritt). In der Methode setUpUi wird noch ein Parameter __Controller__ hinzugefügt, 
+damit man die Buttons mit den Methoden verknüpfen kann.  
+Die __Model__ Klasse beinhaltet einzig und allein einen Konstruktor und darin eine student Liste.  
+Im __Controller__ ist die Logik hinter der Desktop App.  
+
+Dort sind die Methoden für das Löschen, Adden, Editieren und Abrufen. Dort gibt es auch die Methode show(). Diese ist dafür zuständig, dass das Window angezeigt wird 
+und ruft auch gleichzeitig noch die Methode zum Abrufen aller User aus der Datenbank beim Öffnen des Fensters auf.  
+```python
+def show(self):
+	self.window.show()
+	self.getAllStudents()
+```
