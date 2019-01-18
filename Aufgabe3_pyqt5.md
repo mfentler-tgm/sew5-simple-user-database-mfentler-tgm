@@ -19,9 +19,9 @@ pyuic5 -x input.ui -o output.py
 ```
 
 ## MVC
-Als Design Pattern wird MVC verwendet. Die View ist das umgewandelte ui File (vorheriger Schritt). In der Methode setUpUi wird noch ein Parameter __Controller__ hinzugefügt, 
+Als Design Pattern wird MVC verwendet. Die __View__ ist das umgewandelte ui File (vorheriger Schritt). In der Methode __setpUi()__ wird noch ein Parameter __Controller__ hinzugefügt, 
 damit man die Buttons mit den Methoden verknüpfen kann.  
-Die __Model__ Klasse beinhaltet einzig und allein einen Konstruktor und darin eine student Liste.  
+Die __Model__ Klasse beinhaltet einzig und allein einen Konstruktor und darin eine student Liste. 
 Im __Controller__ ist die Logik hinter der Desktop App.  
 
 Dort sind die Methoden für das Löschen, Adden, Editieren und Abrufen. Dort gibt es auch die Methode show(). Diese ist dafür zuständig, dass das Window angezeigt wird 
@@ -31,3 +31,48 @@ def show(self):
 	self.window.show()
 	self.getAllStudents()
 ```
+
+Für die CRUD Methoden werden weiterhin die Methoden des Servers verwendet. Um diese zu erreichen arbeiten wir mit __requests__. Die Methoden im Controller holen sich lediglich die Werte aus der GUI, überprüfen diese und senden sie weiter.  
+
+Zur __Anzeige__ der Daten wird eine Tabelle verwendet. Pro user gibt es eine Zeile mit seiner ID(nicht editierbar), Username, Email, Picture und zwei Buttons. Einen zum Speichern der Änderungen und einen zum Löschen.  
+Wenn man Daten von einem bestehenden User ändern will muss man einfach nur in die Zelle klicken, den Wert ändern und auf den Button klicken. Der sendet die Argumente dann an den Server und lädt die Seite und die User der Tabelle neu.  
+
+Wenn man neue Rows an die Tabelle anhängt, dann werden die Werte in einer Tabellenreihe mit "__setItem()__" hinzugefügt. Wenn man allerdings Buttons hinzufügen will, dann muss man die Methode "__setCellWidget(<row>,<column>,<QtWidget>)__" verwenden.  
+Den Buttons muss man dann auch noch eine OnClick Methode zuweisen. Dabei ist zu beachten, dass man allerdings nur einen Verweis anstatt einem Methodenaufruf machen muss - also ohne die "__()__".  
+Wenn die Methode allerdings Parameter benötigt, dann kann man die mit __partial()__ zuweisen.
+```python
+self.view.allStudentsTable.setItem(rowPosition, 1, QtWidgets.QTableWidgetItem(student['username']))
+```
+```python
+btn = QPushButton('Update', self.view.allStudentsTable)
+self.view.allStudentsTable.setCellWidget(rowPosition, 4, btn)
+#Source: http://discourse.techart.online/t/pyqt-maya-how-to-pass-arguments-to-a-function-when-connecting-it-to-pyqt-button/2953/2
+btn.clicked.connect(partial(self.editStudent, current_row = rowPosition))
+self.editButtons.append(btn)
+```
+
+## Testing
+Für das Testen wird __pytest-qt__ verwendet. Dieses Package enthält einen __qtBot__ mit dem man Mausklicks und Tastatureingaben auf der GUI simulieren und testen kann.  
+
+Im neuen Testfile wird wieder eine __pytest.fixture__ verwendet, die immer vor jedem Testcase aufgerufen wird. Darin werden die Klassen immer neu aufgerufen, zwei Testuser eingefügt und am Ende wieder gelöscht.  
+Mit __yield(controller,qtbot)__ definiert man die return values der Methode. Alles was danach in der Methode steht wird erst beim Beenden aufgerufen (User wieder löschen).
+
+Bei den Testcases wird einfach überprüft ob sie die GUI bei gewissen Aktionen ändert und ob sich die Daten in der Datenbank ändern, falls man einen User löscht über den Button zum Beispiel.  
+Bei diesem Testcase wird überprüft ob eine neue Row in die Tabelle eingefügt wurde nachdem, ein neuer User geaddet wurde.  
+```python
+def test_addingUser_allArgs(setUp):
+    controller, qtbot = setUp
+
+    rows = controller.view.allStudentsTable.rowCount()
+
+    qtbot.keyClicks(controller.view.addStudent_username, "Mario Fentler")
+    qtbot.keyClicks(controller.view.addStudent_email, "mfentler@student.tgm.ac.at")
+    qtbot.keyClicks(controller.view.addStudent_picture, "http://cdn.ebaumsworld.com/mediaFiles/picture/2453506/85677232.jpg")
+    qtbot.mouseClick(controller.view.addStudent_button, QtCore.Qt.LeftButton)
+
+    time.sleep(0.5)
+
+    assert(controller.view.allStudentsTable.rowCount() == rows+1)
+```
+
+Damit der __Innvocation Error__ nicht kommt beim Ausführen der Pytests auf Travis, muss man das Package __pytest-xvfb__ installieren und auch in das requirements.txt File hinzufügen. ([Source](https://pypi.org/project/pytest-xvfb/))
