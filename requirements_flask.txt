@@ -1,0 +1,10 @@
+pytest
+pytest-cov
+pytest-html
+flask
+flask-cors
+flask-restful
+flask-sqlalchemy
+flask-marshmallow
+requests
+sphinx >= 1.7.5, < 2
