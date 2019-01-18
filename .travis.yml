@@ -9,10 +9,14 @@ matrix:
         - pip install tox
       before_script:
         - cd $TRAVIS_BUILD_DIR/src/main/vue/client
-        - npm run serverStart & sleep 20
+        - npm run server:start & sleep 20
         - cd $TRAVIS_BUILD_DIR
       script:
         - tox
+      cache:
+        directories:
+          - ~/.npm
+          - ~/.chache
 
     - language: generic
       python:
@@ -29,5 +33,5 @@ matrix:
         - cd $TRAVIS_BUILD_DIR/src/main/vue/client
       script:
         - npm start & sleep 20
-        - npm run serverStart & sleep 20
+        - npm run server:start & sleep 20
         - node_modules/.bin/cypress run
