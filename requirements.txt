@@ -1,6 +1,8 @@
 pytest
 pytest-cov
 pytest-html
+pytest-qt
+pyqt5
 flask
 flask-cors
 flask-restful
@@ -8,6 +10,4 @@ flask-sqlalchemy
 flask-marshmallow
 requests
 sphinx >= 1.7.5, < 2
-pyqt5
-pyqt5-tools
-pytest-qt
+
