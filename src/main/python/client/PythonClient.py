@@ -4,12 +4,13 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 
 def main():
-    app = QtWidgets.QApplication([])
-    controller = ClientController()
-    controller.show()
-    app.exec_()
-
-    #controller.close()
+    try:
+        app = QtWidgets.QApplication([])
+        controller = ClientController()
+        controller.show()
+        app.exec_()
+    except:
+        print("Start server first")
 
 
 if __name__ == "__main__":

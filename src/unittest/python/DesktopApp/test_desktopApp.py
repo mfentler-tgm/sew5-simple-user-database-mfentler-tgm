@@ -45,9 +45,33 @@ def test_addingUser_allArgs(setUp):
     qtbot.keyClicks(controller.view.addStudent_picture, "http://cdn.ebaumsworld.com/mediaFiles/picture/2453506/85677232.jpg")
     qtbot.mouseClick(controller.view.addStudent_button, QtCore.Qt.LeftButton)
 
-    time.sleep(1.5)
+    time.sleep(0.5)
 
     assert(controller.view.allStudentsTable.rowCount() == rows+1)
+
+def test_addingUser_noUsername(setUp):
+    controller, qtbot = setUp
+
+    rows = controller.view.allStudentsTable.rowCount()
+
+    qtbot.keyClicks(controller.view.addStudent_email, "mfentler@student.tgm.ac.at")
+    qtbot.mouseClick(controller.view.addStudent_button, QtCore.Qt.LeftButton)
+
+    time.sleep(0.5)
+
+    assert(controller.view.allStudentsTable.rowCount() == rows)
+
+def test_addingUser_noEmail(setUp):
+    controller, qtbot = setUp
+
+    rows = controller.view.allStudentsTable.rowCount()
+
+    qtbot.keyClicks(controller.view.addStudent_username, "Mario Fentler")
+    qtbot.mouseClick(controller.view.addStudent_button, QtCore.Qt.LeftButton)
+
+    time.sleep(0.5)
+
+    assert(controller.view.allStudentsTable.rowCount() == rows)
 
 def test_editingUser_textChanging(setUp):
     controller, qtbot = setUp
@@ -61,11 +85,39 @@ def test_editingUser_dataChanges(setUp):
     controller.view.allStudentsTable.setItem(1, 1, QtWidgets.QTableWidgetItem("edited"))
     qtbot.mouseClick(controller.editButtons[1], QtCore.Qt.LeftButton)
 
-    time.sleep(1.5)
+    time.sleep(0.5)
 
     url = "http://localhost:5000/user/" + controller.view.allStudentsTable.item(1,0).text()
     response = requests.get(url).json()
     assert(response['username'] == "edited")
+
+def test_editingUser_usernameEmpty(setUp):
+    controller, qtbot = setUp
+
+    oldUsername = controller.view.allStudentsTable.item(1,1).text()
+
+    controller.view.allStudentsTable.setItem(1, 1, QtWidgets.QTableWidgetItem(""))
+    qtbot.mouseClick(controller.editButtons[1], QtCore.Qt.LeftButton)
+
+    time.sleep(0.5)
+
+    url = "http://localhost:5000/user/" + controller.view.allStudentsTable.item(1,0).text()
+    response = requests.get(url).json()
+    assert(response['username'] == oldUsername)
+
+def test_editingUser_emailEmpty(setUp):
+    controller, qtbot = setUp
+
+    oldUsername = controller.view.allStudentsTable.item(1,2).text()
+
+    controller.view.allStudentsTable.setItem(1, 2, QtWidgets.QTableWidgetItem(""))
+    qtbot.mouseClick(controller.editButtons[1], QtCore.Qt.LeftButton)
+
+    time.sleep(0.5)
+
+    url = "http://localhost:5000/user/" + controller.view.allStudentsTable.item(1,0).text()
+    response = requests.get(url).json()
+    assert(response['email'] == oldUsername)
 
 def test_deleteUser_dataChanges(setUp):
     controller, qtbot = setUp
@@ -73,7 +125,7 @@ def test_deleteUser_dataChanges(setUp):
     id = controller.view.allStudentsTable.item(1,0).text()
     qtbot.mouseClick(controller.deleteButtons[1], QtCore.Qt.LeftButton)
 
-    time.sleep(1.5)
+    time.sleep(0.5)
 
     url = "http://localhost:5000/user"
     response = requests.get(url).json()
@@ -88,7 +140,7 @@ def test_deleteUser_guiChanges(setUp):
     id = controller.view.allStudentsTable.item(1,0).text()
     qtbot.mouseClick(controller.deleteButtons[1], QtCore.Qt.LeftButton)
 
-    time.sleep(1.5)
+    time.sleep(0.5)
 
     assert((rows-1) == controller.view.allStudentsTable.rowCount())
 
