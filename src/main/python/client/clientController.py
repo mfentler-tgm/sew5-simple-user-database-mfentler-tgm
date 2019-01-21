@@ -10,9 +10,18 @@ from client.clientModel import Model
 #from client.clientModel import Model
 import requests, json
 from functools import partial
+import configparser
 
 class ClientController(object):
     def __init__(self):
+        config = configparser.ConfigParser()
+        config.read('../../customConfig.ini')
+
+        if (config['Flask']['port'] != ""):
+            self.port = config['Flask']['port']
+        else:
+            self.port = 5000
+
         self.view = Ui_Client()
 
         self.window = QtWidgets.QMainWindow()
@@ -39,7 +48,7 @@ class ClientController(object):
         if(picture):
             self.picture = picture.text()
         if((self.username != "") & (self.email != "")):
-            url = "http://localhost:5000/user"
+            url = "http://127.0.0.1:" + str(self.port) + "/user"
             json_dict = {'username': self.username, 'email': self.email, 'picture': self.picture}
             requests.post(url, json = json_dict)
         self.updateStudentList()
@@ -51,7 +60,7 @@ class ClientController(object):
             email = self.view.allStudentsTable.item(current_row, 2).text()
             picture = self.view.allStudentsTable.item(current_row, 3).text()
 
-            url = "http://localhost:5000/user/" + str(id)
+            url = "http://127.0.0.1:" + str(self.port) + "/user/" + str(id)
 
             # Checks if username and email are not null and not empty
             if ((username != "") & (email != "") & (picture != "")):
@@ -69,13 +78,13 @@ class ClientController(object):
         if (current_row is not None):
             id = self.view.allStudentsTable.item(current_row, 0).text()
 
-            url = "http://localhost:5000/user/" + str(id)
+            url = "http://127.0.0.1:" + str(self.port) + "/user/" + str(id)
             response = requests.delete(url)
             self.updateStudentList()
 
     def updateStudentList(self):
 
-        self.model.students = requests.get("http://127.0.0.1:5000/user")
+        self.model.students = requests.get("http://127.0.0.1:" + str(self.port) + "/user")
 
         self.view.allStudentsTable.setRowCount(0)
         self.editButtons = []

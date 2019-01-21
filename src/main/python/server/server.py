@@ -5,6 +5,7 @@ from flask_marshmallow import Marshmallow
 from flask_cors import CORS
 import os
 import base64
+import configparser
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -142,5 +143,24 @@ api.add_resource(UserList, '/user')
 api.add_resource(User, '/user/<user_id>')
 
 if __name__ == '__main__':
+    config = configparser.ConfigParser()
+    try:
+        config.read('../../customConfig.ini')
+
+        if(config['Flask']['port'] != ""):
+            port = config['Flask']['port']
+        else:
+            port = 5000
+    except:
+        try:
+            config.read('src/main/customConfig.ini')
+
+            if (config['Flask']['port'] != ""):
+                port = config['Flask']['port']
+            else:
+                port = 5000
+        except:
+            port = 5000
+
     db.create_all()
-    app.run(debug=True)
+    app.run(port=port, debug=True)
