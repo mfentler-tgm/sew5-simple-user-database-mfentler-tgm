@@ -144,23 +144,13 @@ api.add_resource(User, '/user/<user_id>')
 
 if __name__ == '__main__':
     config = configparser.ConfigParser()
-    try:
-        config.read('../../customConfig.ini')
 
-        if(config['Flask']['port'] != ""):
-            port = config['Flask']['port']
-        else:
-            port = 5000
-    except:
-        try:
-            config.read('src/main/customConfig.ini')
+    config.read('../../customConfig.ini')
 
-            if (config['Flask']['port'] != ""):
-                port = config['Flask']['port']
-            else:
-                port = 5000
-        except:
-            port = 5000
+    if(config['Flask']['port'] != ""):
+        port = config['Flask']['port']
+    else:
+        port = 5000
 
     db.create_all()
     app.run(port=port, debug=True)
