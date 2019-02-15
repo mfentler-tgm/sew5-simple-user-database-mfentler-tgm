@@ -11,10 +11,17 @@ Die detaillierte Aufgabenstellung zu der Übung befindet sich [hier](TODO3.md)
 
 ## Deploying
 - Server starten:  
-Im Ordner /src/main/(server.py)
+/src/main/python/server/server.py
+```bash
+python src/main/python/server/server.py &
+```
 - PythonClient starten
+```bash
+python src/main/python/client/PythonClient.py
+```
 oder
-- Tox starten - für die Testcases
+- Tox starten - für die Testcases  
+tox.ini ausführen
 ## Implementierung
 ### Vorarbeit
 Als erstes muss PyQt5 installiert werden.  

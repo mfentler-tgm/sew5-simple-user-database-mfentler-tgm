@@ -4,9 +4,9 @@ import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QPushButton, QWidget
-from client.clientView import Ui_Client
+from clientView import Ui_Client
 #from client.clientView import Ui_Client
-from client.clientModel import Model
+from clientModel import Model
 #from client.clientModel import Model
 import requests, json
 from functools import partial

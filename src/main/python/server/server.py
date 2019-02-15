@@ -3,9 +3,12 @@ from flask_restful import reqparse, Api, Resource
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_cors import CORS
+from pathlib import Path
 import os
 import base64
 import configparser
+
+import hashlib
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -29,8 +32,9 @@ class User_DB(db.Model):
     username = db.Column(db.String(80), unique=True)
     email = db.Column(db.String(120), unique=True)
     picture = db.Column(db.String(2048), default=None)
+    password = db.Column(db.String(2048), unique=True)
 
-    def __init__(self, username, email,picture=None):
+    def __init__(self, username, password, email,picture=None):
         '''
         This Methods adds a new user to the db
         :param username: The username of the user
@@ -38,6 +42,7 @@ class User_DB(db.Model):
         :param picture: The picture of the user.
         '''
         self.username = username
+        self.password = hashlib.sha256(password)
         self.email = email
         self.picture = picture
 
@@ -47,7 +52,7 @@ class UserSchema(ma.Schema):
     '''
     class Meta:
         # Fields to expose
-        fields = ('id','username', 'email','picture')
+        fields = ('id','username', 'password', 'email','picture')
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
@@ -87,6 +92,9 @@ class User(Resource):
         if ('username' in request.json):
             username = request.json['username']
             user.username = username
+        if ('password' in request.json):
+            password = request.json['password']
+            user.password = password
         if ('email' in request.json):
             email = request.json['email']
             user.email = email
@@ -117,17 +125,20 @@ class UserList(Resource):
         '''
         if('username' not in request.json):
             raise ValueError('Give username a value')
+        if('password' not in request.json):
+            raise ValueError('No password provided')
         if ('email' not in request.json):
             raise ValueError('Give email a value')
 
         username = request.json['username']
+        password = request.json['password']
         email = request.json['email']
         try:
             picture = request.json['picture']
-            new_user = User_DB(username, email, picture=picture)
+            new_user = User_DB(username, password, email, picture=picture)
         except:
             try:
-                new_user = User_DB(username, email)
+                new_user = User_DB(username, password, email)
             except:
                 raise ValueError('The user exists already')
 
@@ -145,6 +156,11 @@ api.add_resource(User, '/user/<user_id>')
 if __name__ == '__main__':
     config = configparser.ConfigParser()
 
+    # https://stackoverflow.com/questions/27844088/python-get-directory-two-levels-up
+    #pathToConfig = Path(os.getcwd()).parents[1]
+    #pathToConfig = os.path.join(pathToConfig,'customConfig.ini')
+    #print(pathToConfig)
+    #config.read(pathToConfig)
     config.read('../../customConfig.ini')
 
     if(config['Flask']['port'] != ""):
