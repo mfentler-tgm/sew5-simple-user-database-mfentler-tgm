@@ -9,8 +9,8 @@ def main():
         controller = ClientController()
         controller.show()
         app.exec_()
-    except:
-        print("Start server first")
+    except Exception as e:
+        print(e)
 
 if __name__ == "__main__":
     main()

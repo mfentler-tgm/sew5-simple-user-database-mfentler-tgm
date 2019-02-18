@@ -9,13 +9,20 @@ import base64
 import configparser
 
 import hashlib
+from flask_httpauth import HTTPDigestAuth
+import sqlite3
+
+auth = HTTPDigestAuth()
 
 app = Flask(__name__)
+#https://stackoverflow.com/questions/26080872/secret-key-not-set-in-flask-session-using-the-flask-session-extension
+app.secret_key = "super secret key"
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'usercrud.sqlite')
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 api = Api(app)
+
 
 #enable CORS
 CORS(app)
@@ -32,7 +39,7 @@ class User_DB(db.Model):
     username = db.Column(db.String(80), unique=True)
     email = db.Column(db.String(120), unique=True)
     picture = db.Column(db.String(2048), default=None)
-    password = db.Column(db.String(2048), unique=True)
+    password = db.Column(db.String(255), unique=True)
 
     def __init__(self, username, password, email,picture=None):
         '''
@@ -42,9 +49,13 @@ class User_DB(db.Model):
         :param picture: The picture of the user.
         '''
         self.username = username
-        self.password = hashlib.sha256(password)
+        #self.password = hashlib.sha256(password)
+        self.password = password
         self.email = email
         self.picture = picture
+
+    def getPassword(self):
+        return self.password
 
 class UserSchema(ma.Schema):
     '''
@@ -57,10 +68,22 @@ class UserSchema(ma.Schema):
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
+@auth.get_password
+def get_pw(username):
+    user = User_DB.query.all()
+    if user is not None:
+        print(user)
+        if user[1].equals(username):
+            print(user[2])
+            return user
+    return None
+
+
 class User(Resource):
     '''
     The REST-Class with the methods that can be accessed over /user/<id>
     '''
+    @auth.login_required
     def get(self, user_id):
         '''
         Method that handles the HTTP-GET method.
@@ -70,6 +93,7 @@ class User(Resource):
         user = User_DB.query.get(user_id)
         return user_schema.jsonify(user)
 
+    @auth.login_required
     def delete(self, user_id):
         '''
         Method that handles the HTTP-DELETE method.
@@ -82,6 +106,7 @@ class User(Resource):
 
         return user_schema.jsonify(user)
 
+    @auth.login_required
     def put(self, user_id):
         '''
         Method that handles the HTTP-PUT method.
@@ -109,6 +134,7 @@ class UserList(Resource):
     '''
     The REST-Class with the methods that can be accessed over /user
     '''
+    @auth.login_required
     def get(self):
         '''
         Method that handles the HTTP-GET method without a userid.
@@ -118,6 +144,7 @@ class UserList(Resource):
         result = users_schema.dump(all_users)
         return jsonify(result.data)
 
+    @auth.login_required
     def post(self):
         '''
         Method that handles the HTTP-POST method and creates a new user.
@@ -153,6 +180,11 @@ class UserList(Resource):
 api.add_resource(UserList, '/user')
 api.add_resource(User, '/user/<user_id>')
 
+try:
+    new_user = User_DB('admin', '1234', 'admin@mail.com')
+except:
+    raise ValueError('The user exists already')
+
 if __name__ == '__main__':
     config = configparser.ConfigParser()
 
@@ -169,4 +201,6 @@ if __name__ == '__main__':
         port = 5000
 
     db.create_all()
+
     app.run(port=port, debug=True)
+

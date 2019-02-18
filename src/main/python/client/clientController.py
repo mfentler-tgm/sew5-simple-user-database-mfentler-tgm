@@ -1,6 +1,3 @@
-from PyQt5 import *
-from PyQt5.QtCore import QThread
-import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QPushButton, QWidget
@@ -34,7 +31,7 @@ class ClientController(object):
 
     def show(self):
         self.window.show()
-        self.getAllStudents()
+        #self.getAllStudents()
 
     def getAllStudents(self):
         self.view.loadStudent_button.setEnabled(False)
