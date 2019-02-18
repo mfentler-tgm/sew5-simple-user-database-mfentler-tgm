@@ -1,5 +1,5 @@
-from clientController import ClientController
-#from client.clientController import ClientController
+#from clientController import ClientController
+from client.clientController import ClientController
 from PyQt5 import QtCore, QtGui, QtWidgets
 import sys
 

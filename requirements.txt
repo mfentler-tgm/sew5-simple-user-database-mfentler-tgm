@@ -8,6 +8,7 @@ flask-cors
 flask-restful
 flask-sqlalchemy
 flask-marshmallow
+flask-httpauth
 requests
 sphinx >= 1.7.5, < 2
 pytest-xvfb

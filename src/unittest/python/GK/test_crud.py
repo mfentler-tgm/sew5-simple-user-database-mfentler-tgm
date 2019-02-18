@@ -5,7 +5,18 @@ import pytest
 import json
 from server.server import app, db
 
+from flask_httpauth import HTTPDigestAuth
+from hashlib import md5 as basic_md5
+from werkzeug.http import parse_dict_header
+import re
+
 userCounter = 0
+
+
+def md5(str):
+    if type(str).__name__ == 'str':
+        str = str.encode('utf-8')
+    return basic_md5(str)
 
 @pytest.fixture
 def client():
@@ -15,6 +26,7 @@ def client():
     '''
     print('\n----- CREATE FLASK APPLICATION\n')
     test_client = app.test_client()
+    app.secret_key = "super secret key"
 
     global userCounter
     userCounter = 0
@@ -28,12 +40,49 @@ def countUser(client):
     :param client: is the Flask test_client.
     '''
 
-    result = client.get('/user')
+    result = client.get('/user', auth=HTTPDigestAuth('admin', '1234'))
     json_data = json.loads(result.data)
     global userCounter
     for item in json_data:
         userCounter += 1
     print(userCounter)
+
+def test_noAuth(client):
+    response = client.get('/user')
+    assert (response.status_code == 401)
+
+def test_digest_auth_prompt(client):
+    response = client.get('/user')
+    assert(response.status_code == 401)
+    assert('WWW-Authenticate' in response.headers)
+    assert(re.match(r'^Digest realm="Authentication Required",'
+                             r'nonce="[0-9a-f]+",opaque="[0-9a-f]+"$',
+                             response.headers['WWW-Authenticate']))
+
+def test_digest_auth_login_valid(client):
+    response = client.get('/user/0')
+    assert (response.status_code == 401)
+    header = response.headers.get('WWW-Authenticate')
+    auth_type, auth_info = header.split(None, 1)
+    d = parse_dict_header(auth_info)
+
+    a1 = 'admin:' + d['realm'] + ':1234'
+    ha1 = md5(a1).hexdigest()
+    a2 = 'GET:/user/0'
+    ha2 = md5(a2).hexdigest()
+    a3 = ha1 + ':' + d['nonce'] + ':' + ha2
+    auth_response = md5(a3).hexdigest()
+
+    response = client.get(
+        '/user/0', headers={
+            'Authorization': 'Digest username="admin",realm="{0}",'
+                             'nonce="{1}",uri="/user/0",response="{2}",'
+                             'opaque="{3}"'.format(d['realm'],
+                                                   d['nonce'],
+                                                   auth_response,
+                                                   d['opaque'])})
+    print(response.data)
+    assert (response.data[0]["username"] == "admin")
 
 def test_post_user(client):
     '''
@@ -45,7 +94,7 @@ def test_post_user(client):
     print('\n----- TESTING POST USER\n')
 
     json_dict = {"email":"testuser@student.tgm.ac.at","username":"testuser","picture":"linkZumBild"}
-    response = client.post('/user', data=json.dumps(json_dict), content_type='application/json')
+    response = client.post('/user', data=json.dumps(json_dict), content_type='application/json', auth=HTTPDigestAuth('admin', '1234'))
     assert response.status_code == 200
 
 def test_post_user_notAllArgs(client):
@@ -58,7 +107,7 @@ def test_post_user_notAllArgs(client):
     print('\n----- TESTING POST USER WITH NOT ALL ARGS GIVEN\n')
 
     json_dict = {"username": "testuser", "picture": "linkZumBild"}
-    response = client.post('/user', data=json.dumps(json_dict), content_type='application/json')
+    response = client.post('/user', data=json.dumps(json_dict), content_type='application/json', auth=HTTPDigestAuth('admin', '1234'))
     assert ValueError
     assert response.status_code == 500
 
@@ -72,10 +121,10 @@ def test_post_user_userExists(client):
     print('\n----- TESTING POST USER with existing data\n')
 
     json_dict = {"email": "testuser@student.tgm.ac.at", "username": "testuser", "picture": "linkZumBild"}
-    response = client.post('/user', data=json.dumps(json_dict), content_type='application/json')
+    response = client.post('/user', data=json.dumps(json_dict), content_type='application/json', auth=HTTPDigestAuth('admin', '1234'))
 
     json_dict = {"email": "testuser@student.tgm.ac.at", "username": "testuser", "picture": "linkZumBild"}
-    response = client.post('/user', data=json.dumps(json_dict), content_type='application/json')
+    response = client.post('/user', data=json.dumps(json_dict), content_type='application/json', auth=HTTPDigestAuth('admin', '1234'))
     assert ValueError
 
 def test_get_user(client):
@@ -109,7 +158,7 @@ def test_put_user(client):
     countUser(client)
     url = '/user/' + str(userCounter)
     json_dict = {"email": "Neue Email", "username": "testuser"}
-    response = client.put(url, data=json.dumps(json_dict), content_type='application/json')
+    response = client.put(url, data=json.dumps(json_dict), content_type='application/json', auth=HTTPDigestAuth('admin', '1234'))
     assert response.status_code == 200
 
     response = client.get(url)

@@ -39,7 +39,7 @@ class User_DB(db.Model):
     username = db.Column(db.String(80), unique=True)
     email = db.Column(db.String(120), unique=True)
     picture = db.Column(db.String(2048), default=None)
-    password = db.Column(db.String(255), unique=True)
+    password = db.Column(db.String(255))
 
     def __init__(self, username, password, email,picture=None):
         '''
@@ -73,11 +73,8 @@ def get_pw(username):
     all_users = User_DB.query.all()
     result = users_schema.dump(all_users)
     if result.data is not None:
-        jsonify(result.data)
-        print(result.data["username"])
-        if result.data["username"].equals(username):
-            print(result.data["password"])
-            return result.data
+        if result.data[0]["username"] == (username):
+            return result.data[0]['password']
     return None
 
 
@@ -152,6 +149,7 @@ class UserList(Resource):
         Method that handles the HTTP-POST method and creates a new user.
         :return: returns the created user in json format
         '''
+        print(request.json)
         if('username' not in request.json):
             raise ValueError('Give username a value')
         if('password' not in request.json):
