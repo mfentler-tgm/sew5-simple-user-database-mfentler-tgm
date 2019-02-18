@@ -70,12 +70,14 @@ users_schema = UserSchema(many=True)
 
 @auth.get_password
 def get_pw(username):
-    user = User_DB.query.all()
-    if user is not None:
-        print(user)
-        if user[1].equals(username):
-            print(user[2])
-            return user
+    all_users = User_DB.query.all()
+    result = users_schema.dump(all_users)
+    if result.data is not None:
+        jsonify(result.data)
+        print(result.data["username"])
+        if result.data["username"].equals(username):
+            print(result.data["password"])
+            return result.data
     return None
 
 
