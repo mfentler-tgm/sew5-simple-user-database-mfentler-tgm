@@ -78,21 +78,13 @@ def get_ha1(user, pw, realm):
 def get_password(username):
     all_users = User_DB.query.all()
     result = users_schema.dump(all_users)
+    print(result.data)
     for user in result.data:
         if user["username"] == username:
             print(user["password"])
             return user["password"]
     return None
 
-@auth.get_password
-def get_pw(username):
-    all_users = User_DB.query.all()
-    result = users_schema.dump(all_users)
-    if result.data is not None:
-        if result.data[0]["username"] == (username):
-            print(result.data[0]['password'])
-            return result.data[0]['password']
-    return None
 
 
 class User(Resource):
@@ -191,6 +183,8 @@ class UserList(Resource):
 
         return user_schema.jsonify(new_user)
 
+
+
 ##
 ## Actually setup the Api resource routing here
 ##
@@ -219,5 +213,14 @@ if __name__ == '__main__':
 
     db.create_all()
 
-    app.run(port=port, debug=True)
+    try:
+        newUser = User_DB("admin", "1234", "admin@mail.com")
+
+        db.session.add(new_user)
+        db.session.commit()
+    except:
+        pass
+    finally:
+        app.run(port=port, debug=True)
+
 
