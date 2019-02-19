@@ -11,8 +11,9 @@ import configparser
 import hashlib
 from flask_httpauth import HTTPDigestAuth
 import sqlite3
+from hashlib import md5 as basic_md5
 
-auth = HTTPDigestAuth()
+auth = HTTPDigestAuth(use_ha1_pw=True)
 
 app = Flask(__name__)
 #https://stackoverflow.com/questions/26080872/secret-key-not-set-in-flask-session-using-the-flask-session-extension
@@ -50,12 +51,11 @@ class User_DB(db.Model):
         '''
         self.username = username
         #self.password = hashlib.sha256(password)
-        self.password = password
+        #self.password = password
+        self.password = get_ha1(username,password,auth.realm)
         self.email = email
         self.picture = picture
 
-    def getPassword(self):
-        return self.password
 
 class UserSchema(ma.Schema):
     '''
@@ -68,12 +68,31 @@ class UserSchema(ma.Schema):
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
+def md5(str):
+    str = str.encode('utf-8')
+    return basic_md5(str)
+
+def get_ha1(user, pw, realm):
+    a1 = user + ":" + realm + ":" + pw
+    return md5(a1).hexdigest()
+
+@auth.get_password
+def get_password(username):
+    all_users = User_DB.query.all()
+    result = users_schema.dump(all_users)
+    for user in result.data:
+        if user["username"] == username:
+            print(user["password"])
+            return user["password"]
+    return None
+
 @auth.get_password
 def get_pw(username):
     all_users = User_DB.query.all()
     result = users_schema.dump(all_users)
     if result.data is not None:
         if result.data[0]["username"] == (username):
+            print(result.data[0]['password'])
             return result.data[0]['password']
     return None
 
@@ -143,7 +162,7 @@ class UserList(Resource):
         result = users_schema.dump(all_users)
         return jsonify(result.data)
 
-    @auth.login_required
+    #@auth.login_required
     def post(self):
         '''
         Method that handles the HTTP-POST method and creates a new user.

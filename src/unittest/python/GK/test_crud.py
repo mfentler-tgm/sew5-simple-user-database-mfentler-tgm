@@ -19,6 +19,10 @@ def md5(str):
         str = str.encode('utf-8')
     return basic_md5(str)
 
+def get_ha1(user, pw, realm):
+    a1 = user + ":" + realm + ":" + pw
+    return md5(a1).hexdigest()
+
 @pytest.fixture
 def client():
     '''
