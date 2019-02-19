@@ -9,6 +9,7 @@ from flask_httpauth import HTTPDigestAuth
 from hashlib import md5 as basic_md5
 from werkzeug.http import parse_dict_header
 import re
+import sqlite3
 
 userCounter = 0
 
@@ -28,10 +29,17 @@ def client():
     test_client = app.test_client()
     app.secret_key = "super secret key"
 
+    db.create_all()
+
     global userCounter
     userCounter = 0
 
     yield test_client
+
+    response = client.get('/user')
+    all_user_json = json.loads(response.data)
+    for user in all_user_json:
+        client.delete('/user/' + str(user['id']))
 
 def countUser(client):
     '''
@@ -47,6 +55,29 @@ def countUser(client):
         userCounter += 1
     print(userCounter)
 
+def login(client):
+    response = client.get('/user')
+    assert (response.status_code == 401)
+    header = response.headers.get('WWW-Authenticate')
+    auth_type, auth_info = header.split(None, 1)
+    d = parse_dict_header(auth_info)
+
+    a1 = 'admin2:' + d['realm'] + ':1234'
+    ha1 = md5(a1).hexdigest()
+    a2 = 'GET:/user'
+    ha2 = md5(a2).hexdigest()
+    a3 = ha1 + ':' + d['nonce'] + ':' + ha2
+    auth_response = md5(a3).hexdigest()
+
+    response = client.get(
+        '/user', headers={
+            'Authorization': 'Digest username="admin2",realm="{0}",'
+                             'nonce="{1}",uri="/user",response="{2}",'
+                             'opaque="{3}"'.format(d['realm'],
+                                                   d['nonce'],
+                                                   auth_response,
+                                                   d['opaque'])})
+
 def test_noAuth(client):
     response = client.get('/user')
     assert (response.status_code == 401)
@@ -59,30 +90,6 @@ def test_digest_auth_prompt(client):
                              r'nonce="[0-9a-f]+",opaque="[0-9a-f]+"$',
                              response.headers['WWW-Authenticate']))
 
-def test_digest_auth_login_valid(client):
-    response = client.get('/user/0')
-    assert (response.status_code == 401)
-    header = response.headers.get('WWW-Authenticate')
-    auth_type, auth_info = header.split(None, 1)
-    d = parse_dict_header(auth_info)
-
-    a1 = 'admin:' + d['realm'] + ':1234'
-    ha1 = md5(a1).hexdigest()
-    a2 = 'GET:/user/0'
-    ha2 = md5(a2).hexdigest()
-    a3 = ha1 + ':' + d['nonce'] + ':' + ha2
-    auth_response = md5(a3).hexdigest()
-
-    response = client.get(
-        '/user/0', headers={
-            'Authorization': 'Digest username="admin",realm="{0}",'
-                             'nonce="{1}",uri="/user/0",response="{2}",'
-                             'opaque="{3}"'.format(d['realm'],
-                                                   d['nonce'],
-                                                   auth_response,
-                                                   d['opaque'])})
-    print(response.data)
-    assert (response.data[0]["username"] == "admin")
 
 def test_post_user(client):
     '''
@@ -92,9 +99,30 @@ def test_post_user(client):
     '''
 
     print('\n----- TESTING POST USER\n')
-
+    login(client)
     json_dict = {"email":"testuser@student.tgm.ac.at","username":"testuser","picture":"linkZumBild"}
-    response = client.post('/user', data=json.dumps(json_dict), content_type='application/json', auth=HTTPDigestAuth('admin', '1234'))
+
+    response = client.post('/user')
+    assert (response.status_code == 401)
+    header = response.headers.get('WWW-Authenticate')
+
+    auth_type, auth_info = header.split(None, 1)
+    d = parse_dict_header(auth_info)
+
+    a1 = 'admin:' + d['realm'] + ':1234'
+    ha1 = md5(a1).hexdigest()
+    a2 = 'POST:/user'
+    ha2 = md5(a2).hexdigest()
+    a3 = ha1 + ':' + d['nonce'] + ':' + ha2
+    auth_response = md5(a3).hexdigest()
+
+    response = client.post('/user', data=json.dumps(json_dict), content_type='application/json', headers={
+            'Authorization': 'Digest username="admin",realm="{0}",'
+                             'nonce="{1}",uri="/user",response="{2}",'
+                             'opaque="{3}"'.format(d['realm'],
+                                                   d['nonce'],
+                                                   auth_response,
+                                                   d['opaque'])})
     assert response.status_code == 200
 
 def test_post_user_notAllArgs(client):
