@@ -8,9 +8,7 @@ import os
 import base64
 import configparser
 
-import hashlib
 from flask_httpauth import HTTPDigestAuth
-import sqlite3
 from hashlib import md5 as basic_md5
 
 auth = HTTPDigestAuth(use_ha1_pw=True)
