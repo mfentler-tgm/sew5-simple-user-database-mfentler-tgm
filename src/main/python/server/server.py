@@ -3,9 +3,7 @@ from flask_restful import reqparse, Api, Resource
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_cors import CORS
-from pathlib import Path
 import os
-import base64
 import configparser
 
 from flask_httpauth import HTTPDigestAuth
@@ -48,8 +46,6 @@ class User_DB(db.Model):
         :param picture: The picture of the user.
         '''
         self.username = username
-        #self.password = hashlib.sha256(password)
-        #self.password = password
         self.password = get_ha1(username,password,auth.realm)
         self.email = email
         self.picture = picture
@@ -207,14 +203,15 @@ if __name__ == '__main__':
         port = 5000
 
     db.create_all()
-
+    
     try:
+        print("Adding new user ...")
         newUser = User_DB("admin", "1234", "admin@mail.com")
 
         db.session.add(newUser)
         db.session.commit()
     except:
-        pass
+        print("User already added, continuing ...")
     finally:
         app.run(port=port, debug=True)
 
