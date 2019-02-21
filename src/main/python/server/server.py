@@ -152,7 +152,7 @@ class UserList(Resource):
         result = users_schema.dump(all_users)
         return jsonify(result.data)
 
-    #@auth.login_required
+    @auth.login_required
     def post(self):
         '''
         Method that handles the HTTP-POST method and creates a new user.
