@@ -191,11 +191,6 @@ class UserList(Resource):
 api.add_resource(UserList, '/user')
 api.add_resource(User, '/user/<user_id>')
 
-try:
-    new_user = User_DB('admin', '1234', 'admin@mail.com')
-except:
-    raise ValueError('The user exists already')
-
 if __name__ == '__main__':
     config = configparser.ConfigParser()
 
@@ -216,7 +211,7 @@ if __name__ == '__main__':
     try:
         newUser = User_DB("admin", "1234", "admin@mail.com")
 
-        db.session.add(new_user)
+        db.session.add(newUser)
         db.session.commit()
     except:
         pass
