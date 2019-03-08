@@ -74,10 +74,8 @@ def get_ha1(user, pw, realm):
 def get_password(username):
     all_users = User_DB.query.all()
     result = users_schema.dump(all_users)
-    print(result.data)
     for user in result.data:
         if user["username"] == username:
-            print(user["password"])
             return user["password"]
     return None
 
