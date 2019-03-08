@@ -70,6 +70,72 @@ def get_password(username):
     return None
 ```
 
+## Testing
+Da man nun authentifiziert sein muss um die Methoden benutzen zu können, funktionieren die geschriebenen Tests nicht mehr.  
+Um die Tests wieder lauffähig zu machen muss man HTTP-Header mitgeben.  
+
+Konkret funktioniert das so:  
+__(1.)__ Wird eine get-Anfrage an den Server geschickt und die Response in einem Objekt gespeichert.
+```python
+response = client.get('/user')
+assert (response.status_code == 401)
+```  
+__(2.)__ Aus diesem Response werden dann alle notwendigen Informationen abgerufen um damit und mit Username/Passwort eines Users das verschlüsselte Passwort zu erstellen.  
+```python
+auth_type, auth_info = header.split(None, 1)
+d = parse_dict_header(auth_info)
+
+a1 = 'admin:' + d['realm'] + ':1234'
+ha1 = md5(a1).hexdigest()
+```
+__(3.)__ (Beispiel User adden), in diesem Fall wird nun der HTTP-Header mit der gewünschten Methode erweitert und dann mit dem vorher erstellten Hash zusammengefügt.
+```python
+a2 = 'POST:/user'
+ha2 = md5(a2).hexdigest()
+a3 = ha1 + ':' + d['nonce'] + ':' + ha2
+auth_response = md5(a3).hexdigest()
+```  
+__(4.)__ Dieser Header wird nun beim Aufruf der Methode mitgeben.
+```python
+response = client.post('/user', data=json.dumps(json_dict), content_type='application/json', headers={
+            'Authorization': 'Digest username="admin",realm="{0}",'
+                             'nonce="{1}",uri="/user",response="{2}",'
+                             'opaque="{3}"'.format(d['realm'],
+                                                   d['nonce'],
+                                                   auth_response,
+                                                   d['opaque'])})
+```
+
+Jetzt nochmal die Methode __im Ganzen:__
+```Python
+def login(client, method, json_dict=None, url=None):
+
+    response = client.get('/user')
+    assert (response.status_code == 401)
+    header = response.headers.get('WWW-Authenticate')
+
+    auth_type, auth_info = header.split(None, 1)
+    d = parse_dict_header(auth_info)
+
+    a1 = 'admin:' + d['realm'] + ':1234'
+    ha1 = md5(a1).hexdigest()
+
+    if((method == "post") and (json_dict != None)):
+
+        a2 = 'POST:/user'
+        ha2 = md5(a2).hexdigest()
+        a3 = ha1 + ':' + d['nonce'] + ':' + ha2
+        auth_response = md5(a3).hexdigest()
+
+        response = client.post('/user', data=json.dumps(json_dict), content_type='application/json', headers={
+            'Authorization': 'Digest username="admin",realm="{0}",'
+                             'nonce="{1}",uri="/user",response="{2}",'
+                             'opaque="{3}"'.format(d['realm'],
+                                                   d['nonce'],
+                                                   auth_response,
+                                                   d['opaque'])})
+```
+
 ## Deployment
 Lokal kann man mit __GUnicorn__ deployen. Dieses Package ist allerdings ein UNIX Package, was bedeutet dass es nur auf Linux Maschinen funktioniert.
   

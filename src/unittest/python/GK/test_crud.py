@@ -20,15 +20,6 @@ def client():
     test_client = app.test_client()
     app.secret_key = "super secret key"
 
-    #db.create_all()
-    #try:
-       # print("Adding new user ...")
-        #newUser = User_DB("admin", "1234", "admin@mail.com")
-
-        #db.session.add(newUser)
-        #db.session.commit()
-    #except:
-       # print("User already added, continuing ...")
     createDBAndAdminUser()
 
     global userCounter
